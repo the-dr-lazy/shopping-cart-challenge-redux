@@ -1,0 +1,43 @@
+{
+  "name": "shopping-cart-challenge-redux",
+  "version": "0.0.0",
+  "description": "Shopping cart twitter challenge with Redux internal machinary",
+  "main": "src/index.tsx",
+  "scripts": {
+    "start": "parcel public/index.html",
+    "test": "echo \"No test to run.\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thebrodmann/shopping-cart-challenge-redux.git"
+  },
+  "keywords": [
+    "shopping",
+    "cart",
+    "redux",
+    "react"
+  ],
+  "author": "Mohammad Hasani <thebrodmann@protonmail.com> (https://github.com/thebrodmann)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/thebrodmann/shopping-cart-challenge-redux/issues"
+  },
+  "homepage": "https://github.com/thebrodmann/shopping-cart-challenge-redux#readme",
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "tslib": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/react": "16.9.19",
+    "@types/react-dom": "16.9.5",
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.8.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
