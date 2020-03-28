@@ -10,11 +10,13 @@ import { Environment } from '~/environment'
 // Data Types
 //
 
+export type ProductId = number
+
 /*
  * Did you know that Product type is a product type in algebra? :|
  */
 export type Product = {
-  id: number
+  id: ProductId
   name: string
   price: number
   image: string

@@ -1,11 +1,12 @@
 import * as R from 'rambda'
 import { createActionCreator, createReducer } from 'deox'
 
+import { ProductId } from './products'
+
 //
 // Data Types
 //
 
-export type ProductId = number
 export type Quantity = number
 
 //
