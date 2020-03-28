@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import * as App from './app';
+import * as App from './app'
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root')
 
-function main() {  
-  ReactDOM.render(<App.component />, rootElement);
+function main() {
+  ReactDOM.render(<App.component />, rootElement)
 }
 
 main()
