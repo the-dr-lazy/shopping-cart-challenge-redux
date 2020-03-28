@@ -6,6 +6,7 @@ import { reducer, epic } from './root'
 
 export type { State } from './root'
 export { fetchProducts, Product } from './products'
+export { addProductToCart, removeProductFromCart, clearCart } from './cart'
 
 export function createStore(environment: Environment) {
   const epicMiddleware = createEpicMiddleware({ dependencies: environment })
