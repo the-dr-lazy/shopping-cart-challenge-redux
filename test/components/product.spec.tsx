@@ -48,43 +48,29 @@ describe('<Product.component />', () => {
     ).not.toBeNull()
   })
 
-  it('should render add to cart button', () => {
-    const { queryByText } = render(
-      <Product.component product={Data.Product.a} />
-    )
-
-    expect(queryByText(/add to cart/i)).not.toBeNull()
-  })
-
   describe('when click on add to cart button', () => {
     it('should call onAddToCart callback', () => {
-      const handleAddToCart = jest.fn()
+      const onAddToCart = jest.fn()
 
-      const { getByText } = render(
-        <Product.component
-          product={Data.Product.a}
-          onAddToCart={handleAddToCart}
-        />
+      const { getByLabelText } = render(
+        <Product.component product={Data.Product.a} onAddToCart={onAddToCart} />
       )
 
-      fireEvent.click(getByText(/add to cart/i))
+      fireEvent.click(getByLabelText(/add to cart/i))
 
-      expect(handleAddToCart).toBeCalled()
+      expect(onAddToCart).toBeCalled()
     })
 
     it('should apply correct product ID to onAddToCart callback', () => {
-      const handleAddToCart = jest.fn()
+      const onAddToCart = jest.fn()
 
-      const { getByText } = render(
-        <Product.component
-          product={Data.Product.a}
-          onAddToCart={handleAddToCart}
-        />
+      const { getByLabelText } = render(
+        <Product.component product={Data.Product.a} onAddToCart={onAddToCart} />
       )
 
-      fireEvent.click(getByText(/add to cart/i))
+      fireEvent.click(getByLabelText(/add to cart/i))
 
-      expect(handleAddToCart).toBeCalledWith(Data.Product.a.id)
+      expect(onAddToCart).toBeCalledWith(Data.Product.a.id)
     })
   })
 })
