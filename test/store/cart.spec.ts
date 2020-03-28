@@ -3,7 +3,7 @@ import {
   removeProductFromCart,
   clearCart,
   reducer,
-  getQuantitySum,
+  getCartQuantitySum,
 } from '~/store/cart'
 
 import * as Data from '../data'
@@ -127,14 +127,14 @@ describe('Store.Cart', () => {
   })
 
   describe('selectors', () => {
-    describe('getQuantitySum', () => {
+    describe('getCartQuantitySum', () => {
       it('should return 0 for empty cart', () => {
-        expect(getQuantitySum({})).toBe(0)
+        expect(getCartQuantitySum({})).toBe(0)
       })
 
       it('should return sum of the cart quantities', () => {
         expect(
-          getQuantitySum({
+          getCartQuantitySum({
             [Data.Product.a.id]: 11,
             [Data.Product.b.id]: 6,
           })

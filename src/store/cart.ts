@@ -51,6 +51,6 @@ export const reducer = createReducer(initialState, (handleAction) => [
 // Selectors
 //
 
-export function getQuantitySum(state: State) {
+export function getCartQuantitySum(state: State) {
   return R.sum(Object.values(state))
 }

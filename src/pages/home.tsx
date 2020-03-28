@@ -7,8 +7,8 @@ type Props = {
   state: Store.State
 }
 
-export function component(props: Props) {
-  const { products, cart } = props.state
+export function component({ state }: Props) {
+  const { products } = state
 
   const list = products.items.map((product) => (
     <li key={product.id}>
@@ -18,7 +18,7 @@ export function component(props: Props) {
 
   return (
     <div>
-      <Cart.mini cartQuantitySum={Store.Cart.getQuantitySum(cart)} />
+      <Cart.mini cartQuantitySum={Store.getCartQuantitySum(state)} />
 
       {products.isLoading && <p>Loading</p>}
       <ul>{list}</ul>

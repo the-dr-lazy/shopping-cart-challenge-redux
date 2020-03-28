@@ -4,7 +4,7 @@ import { createEpicMiddleware } from 'redux-observable'
 import { Environment } from '~/environment'
 import { reducer, epic } from './root'
 
-export type { State } from './root'
+export * from './root'
 export { fetchProducts, Product, ProductId } from './products'
 export { addProductToCart, removeProductFromCart, clearCart } from './cart'
 
