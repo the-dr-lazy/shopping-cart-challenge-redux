@@ -1,6 +1,7 @@
 {
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "test/**/*"
   ],
   "compileOnSave": false,
   "compilerOptions": {
@@ -22,7 +23,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": true,
     "paths": {
       "~/*": ["./*"]
