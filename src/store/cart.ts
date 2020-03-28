@@ -27,7 +27,7 @@ export const removeProductFromCart = createActionCreator(
 // Reducers
 //
 
-type State = { [key in ProductId]: Quantity }
+export type State = { [key in ProductId]: Quantity }
 
 const initialState: State = {}
 
@@ -46,3 +46,11 @@ export const reducer = createReducer(initialState, (handleAction) => [
     }
   }),
 ])
+
+//
+// Selectors
+//
+
+export function getQuantitySum(state: State) {
+  return R.sum(Object.values(state))
+}

@@ -8,6 +8,8 @@ export type { State } from './root'
 export { fetchProducts, Product, ProductId } from './products'
 export { addProductToCart, removeProductFromCart, clearCart } from './cart'
 
+export * as Cart from './cart'
+
 export function createStore(environment: Environment) {
   const epicMiddleware = createEpicMiddleware({ dependencies: environment })
 
