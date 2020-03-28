@@ -18,12 +18,6 @@ describe('<Cart.mini />', () => {
 
       expect(container.firstChild).toHaveTextContent(/1/)
     })
-
-    it('should render text with singular grammer', () => {
-      const { container } = render(<Cart.mini cartQuantitySum={1} />)
-
-      expect(container.firstChild).toHaveTextContent(/item in/i)
-    })
   })
 
   describe('when the sum of the cart quantity is greater than one', () => {
@@ -31,12 +25,6 @@ describe('<Cart.mini />', () => {
       const { container } = render(<Cart.mini cartQuantitySum={11} />)
 
       expect(container.firstChild).toHaveTextContent(/11/)
-    })
-
-    it('should render text with plural grammer', () => {
-      const { container } = render(<Cart.mini cartQuantitySum={11} />)
-
-      expect(container.firstChild).toHaveTextContent(/items in/i)
     })
   })
 })
