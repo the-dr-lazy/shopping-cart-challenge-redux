@@ -3,16 +3,15 @@ import React from 'react'
 import * as Home from '~/pages/home'
 
 import * as Data from '../data'
-import { render, createHandlers } from '../utils'
+import { render, createHandlers, createState } from '../utils'
 
 describe('<Home.component />', () => {
   const handlers = createHandlers()
 
   describe('when products are loading', () => {
-    const state = {
-      cart: {},
-      products: { isLoading: true, items: [] },
-    }
+    const state = createState({
+      products: { isLoading: true },
+    })
 
     it('should render a loading message', () => {
       const { queryByText } = render(
@@ -32,13 +31,11 @@ describe('<Home.component />', () => {
   })
 
   describe('when products has been loaded', () => {
-    const state = {
-      cart: {},
+    const state = createState({
       products: {
-        isLoading: false,
         items: [Data.Product.a, Data.Product.b],
       },
-    }
+    })
 
     it('should not render loading message', () => {
       const { queryByText } = render(

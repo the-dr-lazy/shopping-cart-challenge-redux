@@ -39,18 +39,18 @@ export function row({
   onRemoveProductFromCart,
 }: RowProps) {
   function handleIncrementQuantityButtonClick() {
-    onAddProductToCart!(product.id)
+    onAddProductToCart(product.id)
   }
 
   function handleDecrementQuantityButtonClick() {
-    onRemoveProductFromCart!(product.id)
+    onRemoveProductFromCart(product.id)
   }
 
   function handleRemoveProductButtonClick() {
-    onRemoveProductFromCart!(product.id, true)
+    onRemoveProductFromCart(product.id, true)
   }
 
-  const incrementQuantityButton = onAddProductToCart && (
+  const incrementQuantityButton = (
     <button
       aria-label="Increase quantity"
       onClick={handleIncrementQuantityButtonClick}
@@ -58,7 +58,7 @@ export function row({
       +1
     </button>
   )
-  const decrementQuantityButton = onRemoveProductFromCart && (
+  const decrementQuantityButton = (
     <button
       aria-label="Decrease quantity"
       disabled={quantity <= 1}
@@ -67,7 +67,7 @@ export function row({
       -1
     </button>
   )
-  const removeProductButton = onRemoveProductFromCart && (
+  const removeProductButton = (
     <button
       aria-label="Remove product from cart"
       onClick={handleRemoveProductButtonClick}

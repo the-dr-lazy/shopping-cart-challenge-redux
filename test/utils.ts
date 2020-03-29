@@ -1,10 +1,13 @@
+import merge from 'deepmerge'
+import * as TestingLibrary from '@testing-library/react'
 import { ReactElement } from 'react'
 import { AnyAction } from 'deox'
 import { Observable } from 'rxjs'
 import { marbles } from 'rxjs-marbles/marbles'
 import { MemoryRouter } from 'react-router-dom'
-import * as TestingLibrary from '@testing-library/react'
 
+import { State } from '~/store'
+import { reducer } from '~/store/root'
 import { Environment } from '~/environment'
 import { Handlers } from '~/handlers'
 
@@ -91,4 +94,8 @@ export function render(
 
 export function createHandlers(handlers: Partial<Handlers> = {}) {
   return <any>handlers
+}
+
+export function createState(state: DeepPartial<State> = {}) {
+  return merge(reducer(undefined, { type: '@@INIT' }), state)
 }

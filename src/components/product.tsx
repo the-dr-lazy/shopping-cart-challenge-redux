@@ -7,10 +7,10 @@ type Props = PropsWithHandlers<{ product: Store.Product }, 'onAddProductToCart'>
 
 export function component({ product, onAddProductToCart }: Props) {
   function handleAddToCartButtonClick() {
-    onAddProductToCart!(product.id)
+    onAddProductToCart(product.id)
   }
 
-  const addToCartButton = onAddProductToCart && (
+  const addToCartButton = (
     <button aria-label="Add to cart" onClick={handleAddToCartButtonClick}>
       Add To Cart
     </button>
