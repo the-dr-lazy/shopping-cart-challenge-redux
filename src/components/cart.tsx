@@ -25,29 +25,27 @@ export function mini({ cartQuantitySum }: MiniProps) {
 }
 
 type RowProps = PropsWithHandlers<
-  {
-    product: Store.Product
-    quantity: number
-  },
+  { entity: Store.CartEntity },
   'onAddProductToCart' | 'onRemoveProductFromCart'
 >
 
 export function row({
-  product,
-  quantity,
+  entity,
   onAddProductToCart,
   onRemoveProductFromCart,
 }: RowProps) {
+  const { id, name, price, quantity } = entity
+
   function handleIncrementQuantityButtonClick() {
-    onAddProductToCart(product.id)
+    onAddProductToCart(id)
   }
 
   function handleDecrementQuantityButtonClick() {
-    onRemoveProductFromCart(product.id)
+    onRemoveProductFromCart(id)
   }
 
   function handleRemoveProductButtonClick() {
-    onRemoveProductFromCart(product.id, true)
+    onRemoveProductFromCart(id, true)
   }
 
   const incrementQuantityButton = (
@@ -77,11 +75,11 @@ export function row({
   )
 
   return (
-    <tr key={product.id}>
-      <td>{product.name}</td>
+    <tr key={id}>
+      <td>{name}</td>
       <td>{quantity}</td>
-      <td>${product.price}</td>
-      <td>${quantity * product.price}</td>
+      <td>${price}</td>
+      <td>${quantity * price}</td>
       <td>
         {[
           incrementQuantityButton,

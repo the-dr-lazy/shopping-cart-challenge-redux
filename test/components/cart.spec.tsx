@@ -2,9 +2,11 @@ import React from 'react'
 import { fireEvent } from '@testing-library/react'
 
 import * as Cart from '~/components/cart'
+import * as Store from '~/store'
 
 import * as Data from '../data'
 import { render, createHandlers } from '../utils'
+import { createCartEntity } from '~/store/root'
 
 describe('<Cart.mini />', () => {
   describe('when the sum of the cart quantity is zero', () => {
@@ -37,7 +39,7 @@ describe('<Cart.row />', () => {
     const handlers = createHandlers()
 
     const { queryByText } = render(
-      <Cart.row product={Data.Product.a} quantity={2} {...handlers} />,
+      <Cart.row entity={createCartEntity(Data.Product.a)(2)} {...handlers} />,
       'tbody'
     )
 
@@ -50,7 +52,7 @@ describe('<Cart.row />', () => {
     const handlers = createHandlers()
 
     const { queryByText } = render(
-      <Cart.row product={Data.Product.a} quantity={3} {...handlers} />,
+      <Cart.row entity={createCartEntity(Data.Product.a)(3)} {...handlers} />,
       'tbody'
     )
 
@@ -61,7 +63,7 @@ describe('<Cart.row />', () => {
     const handlers = createHandlers()
 
     const { queryByText } = render(
-      <Cart.row product={Data.Product.a} quantity={3} {...handlers} />,
+      <Cart.row entity={createCartEntity(Data.Product.a)(3)} {...handlers} />,
       'tbody'
     )
 
@@ -74,7 +76,7 @@ describe('<Cart.row />', () => {
     const handlers = createHandlers()
 
     const { queryByText } = render(
-      <Cart.row product={Data.Product.b} quantity={5} {...handlers} />,
+      <Cart.row entity={createCartEntity(Data.Product.b)(5)} {...handlers} />,
       'tbody'
     )
 
@@ -90,7 +92,7 @@ describe('<Cart.row />', () => {
       const handlers = createHandlers({})
 
       const { queryByLabelText } = render(
-        <Cart.row product={Data.Product.a} quantity={1} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.a)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -105,7 +107,7 @@ describe('<Cart.row />', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row product={Data.Product.a} quantity={1} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.a)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -120,7 +122,7 @@ describe('<Cart.row />', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row product={Data.Product.b} quantity={1} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.b)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -137,7 +139,7 @@ describe('<Cart.row />', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row product={Data.Product.a} quantity={2} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.a)(2)} {...handlers} />,
         'tbody'
       )
 
@@ -152,7 +154,7 @@ describe('<Cart.row />', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row product={Data.Product.b} quantity={2} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.b)(2)} {...handlers} />,
         'tbody'
       )
 
@@ -169,7 +171,7 @@ describe('<Cart.row />', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row product={Data.Product.a} quantity={1} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.a)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -184,7 +186,7 @@ describe('<Cart.row />', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row product={Data.Product.b} quantity={1} {...handlers} />,
+        <Cart.row entity={createCartEntity(Data.Product.b)(1)} {...handlers} />,
         'tbody'
       )
 

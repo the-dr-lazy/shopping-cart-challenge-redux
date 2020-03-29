@@ -1,7 +1,9 @@
-import * as R from 'rambda'
 import { createActionCreator, createReducer } from 'deox'
+import * as R from 'fp-ts/lib/Record'
+import { increment, decrement, constant } from 'fp-ts/lib/function'
+import { monoidSum } from 'fp-ts/lib/Monoid'
 
-import { ProductId } from './products'
+import { Product, ProductId } from './products'
 
 //
 // Data Types
@@ -16,11 +18,11 @@ export type Quantity = number
 export const clearCart = createActionCreator('[Cart] clear')
 export const addProductToCart = createActionCreator(
   '[Cart] add product',
-  (resolve) => (productId: number) => resolve(productId)
+  (resolve) => (productId: ProductId) => resolve(productId)
 )
 export const removeProductFromCart = createActionCreator(
   '[Cart] remove product',
-  (resolve) => (productId: number, absolute = false) =>
+  (resolve) => (productId: ProductId, absolute = false) =>
     resolve({ productId, absolute })
 )
 
@@ -28,19 +30,21 @@ export const removeProductFromCart = createActionCreator(
 // Reducers
 //
 
-export type State = { [key in ProductId]: Quantity }
+export type State = Record<ProductId, Quantity>
 
 const initialState: State = {}
 
 export const reducer = createReducer(initialState, (handleAction) => [
-  handleAction(clearCart, R.always({})),
+  handleAction(clearCart, constant({})),
+
   handleAction(addProductToCart, (state, { payload }) => ({
     ...state,
-    [payload]: R.inc(state[payload] || 0),
+    [payload]: increment(state[payload] || 0),
   })),
+
   handleAction(removeProductFromCart, (state, { payload }) => {
     const { productId, absolute } = payload
-    const dissociated = R.dissoc<State>(productId.toString(), state)
+    const dissociated = R.deleteAt(productId)(state)
 
     if (absolute) {
       return dissociated
@@ -50,7 +54,7 @@ export const reducer = createReducer(initialState, (handleAction) => [
 
     return {
       ...dissociated,
-      ...(quantity > 1 ? { [productId]: R.dec(quantity) } : {}),
+      ...(quantity > 1 ? { [productId]: decrement(quantity) } : {}),
     }
   }),
 ])
@@ -59,6 +63,10 @@ export const reducer = createReducer(initialState, (handleAction) => [
 // Selectors
 //
 
+export function getCartQuantity(productId: ProductId, state: State) {
+  return R.lookup(productId, state)
+}
+
 export function getCartQuantitySum(state: State) {
-  return R.sum(Object.values(state))
+  return R.reduce(monoidSum.empty, monoidSum.concat)(state)
 }

@@ -6,8 +6,10 @@ import { PropsWithHandlers } from '~/handlers'
 type Props = PropsWithHandlers<{ product: Store.Product }, 'onAddProductToCart'>
 
 export function component({ product, onAddProductToCart }: Props) {
+  const { id, name, price, image } = product
+
   function handleAddToCartButtonClick() {
-    onAddProductToCart(product.id)
+    onAddProductToCart(id)
   }
 
   const addToCartButton = (
@@ -18,9 +20,9 @@ export function component({ product, onAddProductToCart }: Props) {
 
   return (
     <div className="mb-4 p-4 b-1 text-center">
-      <img src={product.image} alt={product.name} />
-      <p>{product.name}</p>
-      <p>price: ${product.price}</p>
+      <img src={image} alt={name} />
+      <p>{name}</p>
+      <p>price: ${price}</p>
       {addToCartButton}
     </div>
   )

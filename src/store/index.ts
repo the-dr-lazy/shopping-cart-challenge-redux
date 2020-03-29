@@ -26,8 +26,14 @@ export {
   Quantity,
 } from './cart'
 export {
+  getIsProductsLoading,
+  getProduct,
+  getProducts,
+  getCartQuantity,
   getCartQuantitySum,
-  getCartEntries,
   getCartTotalPrice,
+  getCartEntity,
+  getCartEntities,
+  CartEntity,
   State,
 } from './root'

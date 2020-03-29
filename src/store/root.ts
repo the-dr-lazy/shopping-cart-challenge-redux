@@ -1,8 +1,27 @@
+import * as R from 'fp-ts/lib/Record'
+import * as O from 'fp-ts/lib/Option'
+import * as A from 'fp-ts/lib/ReadonlyArray'
+import { Option } from 'fp-ts/lib/Option'
+import { pipe } from 'fp-ts/lib/pipeable'
 import { combineReducers } from 'redux'
 import { combineEpics } from 'redux-observable'
 
+import { somes } from '~/utils'
+
 import * as Products from './products'
 import * as Cart from './cart'
+import { Product, ProductId } from './products'
+import { Quantity } from './cart'
+
+//
+// Data Types
+//
+
+export type CartEntity = Product & { quantity: Cart.Quantity }
+
+export function createCartEntity(product: Product) {
+  return (quantity: Quantity) => ({ ...product, quantity })
+}
 
 //
 // Reducer
@@ -25,23 +44,48 @@ export const epic = combineEpics(Products.epic)
 // Selector
 //
 
-export function getCartEntries({ products, cart }: State) {
-  return Object.entries(cart).map(([productId, quantity]) => {
-    const product = products.items.find(
-      ({ id }) => id.toString() === productId
-    )!
-
-    return <[Products.Product, number]>[product, quantity]
-  })
+export function getIsProductsLoading({ products }: State) {
+  return Products.getIsProductsLoading(products)
 }
 
-export function getCartTotalPrice(state: State) {
-  return getCartEntries(state).reduce(
-    (total, [{ price }, quantity]) => total + price * quantity,
-    0
-  )
+export function getProduct(id: Products.ProductId, { products }: State) {
+  return Products.getProduct(id, products)
+}
+
+export function getProducts({ products }: State) {
+  return Products.getProducts(products)
+}
+
+export function getCartQuantity(productId: ProductId, { cart }: State) {
+  return Cart.getCartQuantity(productId, cart)
 }
 
 export function getCartQuantitySum({ cart }: State) {
   return Cart.getCartQuantitySum(cart)
+}
+
+export function getCartTotalPrice(state: State) {
+  return getCartEntities(state).reduce(
+    (total, { price, quantity }) => total + price * quantity,
+    0
+  )
+}
+
+export function getCartEntity(
+  productId: ProductId,
+  state: State
+): Option<CartEntity> {
+  const product = getProduct(productId, state)
+  const quantity = getCartQuantity(productId, state)
+
+  return pipe(product, O.map(createCartEntity), O.ap(quantity))
+}
+
+export function getCartEntities(state: State) {
+  return pipe(
+    state.cart,
+    R.keys,
+    A.map((productId) => getCartEntity(productId, state)),
+    somes
+  )
 }

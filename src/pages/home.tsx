@@ -7,9 +7,7 @@ import { PropsWithHandlers } from '~/handlers'
 type Props = PropsWithHandlers<{ state: Store.State }, 'onAddProductToCart'>
 
 export function component({ state, onAddProductToCart }: Props) {
-  const { products } = state
-
-  const list = products.items.map((product) => (
+  const products = Store.getProducts(state).map((product) => (
     <li key={product.id}>
       <Product.component
         product={product}
@@ -17,13 +15,15 @@ export function component({ state, onAddProductToCart }: Props) {
       />
     </li>
   ))
+  const isLoading = Store.getIsProductsLoading(state)
+  const cartQuantitySum = Store.getCartQuantitySum(state)
 
   return (
     <div>
-      <Cart.mini cartQuantitySum={Store.getCartQuantitySum(state)} />
+      <Cart.mini cartQuantitySum={cartQuantitySum} />
 
-      {products.isLoading && <p>Loading...</p>}
-      <ul>{list}</ul>
+      {isLoading && <p>Loading...</p>}
+      <ul>{products}</ul>
     </div>
   )
 }

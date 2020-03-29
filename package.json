@@ -26,6 +26,7 @@
   "homepage": "https://github.com/thebrodmann/shopping-cart-challenge-redux#readme",
   "dependencies": {
     "deox": "^3.2.1",
+    "fp-ts": "^2.5.3",
     "rambda": "^5.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -50,6 +51,7 @@
     "deepmerge": "^4.2.2",
     "html-webpack-plugin": "^4.0.3",
     "jest": "^25.2.3",
+    "jest-diff": "^25.2.3",
     "prettier": "^2.0.2",
     "rxjs-marbles": "^6.0.0",
     "source-map-loader": "^0.2.4",

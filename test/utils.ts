@@ -5,11 +5,21 @@ import { AnyAction } from 'deox'
 import { Observable } from 'rxjs'
 import { marbles } from 'rxjs-marbles/marbles'
 import { MemoryRouter } from 'react-router-dom'
+import { Some, None } from 'fp-ts/lib/Option'
 
 import { State } from '~/store'
 import { reducer } from '~/store/root'
 import { Environment } from '~/environment'
 import { Handlers } from '~/handlers'
+
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeNone(): R
+      toBeSome(value?: any): R
+    }
+  }
+}
 
 type CreateReducerSpec<TState, TAction extends AnyAction> = {
   action: TAction
@@ -96,6 +106,6 @@ export function createHandlers(handlers: Partial<Handlers> = {}) {
   return <any>handlers
 }
 
-export function createState(state: DeepPartial<State> = {}) {
-  return merge(reducer(undefined, { type: '@@INIT' }), state)
+export function createState(state: DeepPartial<State> = {}): State {
+  return <any>merge(reducer(undefined, { type: '@@INIT' }), state)
 }

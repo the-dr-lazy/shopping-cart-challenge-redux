@@ -2,7 +2,14 @@ import * as R from 'rambda'
 import { combineReducers } from 'redux'
 import { Observable, of } from 'rxjs'
 import { mergeMap, map, catchError } from 'rxjs/operators'
-import { createActionCreator, createReducer, ofType, ActionType } from 'deox'
+import {
+  createActionCreator,
+  createReducer,
+  ofType,
+  ActionType,
+  DeepImmutable,
+} from 'deox'
+import { findFirst } from 'fp-ts/lib/ReadonlyArray'
 
 import { Environment } from '~/environment'
 
@@ -10,7 +17,7 @@ import { Environment } from '~/environment'
 // Data Types
 //
 
-export type ProductId = number
+export type ProductId = string
 
 /*
  * Did you know that Product type is a product type in algebra? :|
@@ -21,6 +28,10 @@ export type Product = {
   price: number
   image: string
 }
+
+type State = DeepImmutable<ReturnType<typeof reducer>>
+
+type Action = ActionType<typeof reducer>
 
 //
 // Action Creators
@@ -33,7 +44,7 @@ export const fetchProducts = {
   ),
   complete: createActionCreator(
     '[Products] fetch/complete',
-    (resolve) => (items: Product[]) => resolve(items)
+    (resolve) => (items: ReadonlyArray<Product>) => resolve(items)
   ),
 }
 
@@ -47,6 +58,7 @@ export const isLoadingReducer = createReducer(
   isLoadingInitialState,
   (handleAction) => [
     handleAction(fetchProducts.next, R.always(true)),
+
     handleAction(
       [fetchProducts.error, fetchProducts.complete],
       R.always(false)
@@ -54,18 +66,32 @@ export const isLoadingReducer = createReducer(
   ]
 )
 
-const itemsInitialState: Product[] = []
+const itemsInitialState: ReadonlyArray<Product> = []
 
 export const itemsReducer = createReducer(itemsInitialState, (handleAction) => [
   handleAction(fetchProducts.complete, (_, { payload }) => payload),
 ])
 
-type Action = ActionType<typeof reducer>
-
 export const reducer = combineReducers({
   isLoading: isLoadingReducer,
   items: itemsReducer,
 })
+
+//
+// Selectors
+//
+
+export function getIsProductsLoading({ isLoading }: State) {
+  return isLoading
+}
+
+export function getProducts({ items }: State) {
+  return items
+}
+
+export function getProduct(id: ProductId, { items }: State) {
+  return findFirst<Product>((product) => product.id === id)(items)
+}
 
 //
 // Epics

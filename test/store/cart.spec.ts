@@ -3,6 +3,7 @@ import {
   removeProductFromCart,
   clearCart,
   reducer,
+  getCartQuantity,
   getCartQuantitySum,
 } from '~/store/cart'
 
@@ -154,18 +155,34 @@ describe('Store.Cart', () => {
   })
 
   describe('selectors', () => {
+    describe('getCartQuantity', () => {
+      it('should return None when there is not any corresponding product in cart', () => {
+        const state = { [Data.Product.b.id]: 1 }
+
+        expect(getCartQuantity(Data.Product.a.id, state)).toBeNone()
+      })
+
+      it('should return Some(number) when cart contains the product', () => {
+        const state = { [Data.Product.a.id]: 1, [Data.Product.b.id]: 7 }
+
+        expect(getCartQuantity(Data.Product.b.id, state)).toBeSome(7)
+      })
+    })
+
     describe('getCartQuantitySum', () => {
       it('should return 0 for empty cart', () => {
-        expect(getCartQuantitySum({})).toBe(0)
+        const state = {}
+
+        expect(getCartQuantitySum(state)).toBe(0)
       })
 
       it('should return sum of the cart quantities', () => {
-        expect(
-          getCartQuantitySum({
-            [Data.Product.a.id]: 11,
-            [Data.Product.b.id]: 6,
-          })
-        ).toBe(17)
+        const state = {
+          [Data.Product.a.id]: 11,
+          [Data.Product.b.id]: 6,
+        }
+
+        expect(getCartQuantitySum(state)).toBe(17)
       })
     })
   })
