@@ -10,13 +10,6 @@ type Props = PropsWithHandlers<
   'onAddProductToCart' | 'onRemoveProductFromCart' | 'onClearCart'
 >
 
-const loading = (
-  <div>
-    <Link to="/">Home</Link>
-    <p>Loading...</p>
-  </div>
-)
-
 export function component({
   state,
   onAddProductToCart,
@@ -66,3 +59,10 @@ export function component({
     </div>
   )
 }
+
+const loading = (
+  <div>
+    <Link to="/">Home</Link>
+    <p>Loading...</p>
+  </div>
+)

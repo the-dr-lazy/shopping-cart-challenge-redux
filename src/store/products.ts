@@ -1,4 +1,5 @@
-import * as R from 'rambda'
+import * as A from 'fp-ts/lib/ReadonlyArray'
+import { constTrue, constFalse } from 'fp-ts/lib/function'
 import { combineReducers } from 'redux'
 import { Observable, of } from 'rxjs'
 import { mergeMap, map, catchError } from 'rxjs/operators'
@@ -9,7 +10,6 @@ import {
   ActionType,
   DeepImmutable,
 } from 'deox'
-import { findFirst } from 'fp-ts/lib/ReadonlyArray'
 
 import { Environment } from '~/environment'
 
@@ -57,12 +57,9 @@ const isLoadingInitialState = false
 export const isLoadingReducer = createReducer(
   isLoadingInitialState,
   (handleAction) => [
-    handleAction(fetchProducts.next, R.always(true)),
+    handleAction(fetchProducts.next, constTrue),
 
-    handleAction(
-      [fetchProducts.error, fetchProducts.complete],
-      R.always(false)
-    ),
+    handleAction([fetchProducts.error, fetchProducts.complete], constFalse),
   ]
 )
 
@@ -90,7 +87,7 @@ export function getProducts({ items }: State) {
 }
 
 export function getProduct(id: ProductId, { items }: State) {
-  return findFirst<Product>((product) => product.id === id)(items)
+  return A.findFirst<Product>((product) => product.id === id)(items)
 }
 
 //

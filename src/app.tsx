@@ -1,5 +1,5 @@
 import React from 'react'
-import * as R from 'rambda'
+import { identity } from 'fp-ts/lib/function'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export function component({ handlers }: Props) {
-  const state = useSelector(R.identity)
+  const state = useSelector(identity)
 
   React.useEffect(() => {
     handlers.onFetchProducts()
