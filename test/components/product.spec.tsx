@@ -4,17 +4,25 @@ import { fireEvent } from '@testing-library/react'
 import * as Product from '~/components/product'
 
 import * as Data from '../data'
-import { render } from '../utils'
+import { render, createHandlers } from '../utils'
 
-describe('<Product.component />', () => {
+describe('<Product.component  {...handlers} />', () => {
   it('should render product image', () => {
-    const { container } = render(<Product.component product={Data.Product.a} />)
+    const handlers = createHandlers()
+
+    const { container } = render(
+      <Product.component product={Data.Product.a} {...handlers} />
+    )
 
     expect(container.querySelector('img')).not.toBeNull()
   })
 
   it('should render product image src', () => {
-    const { container } = render(<Product.component product={Data.Product.a} />)
+    const handlers = createHandlers()
+
+    const { container } = render(
+      <Product.component product={Data.Product.a} {...handlers} />
+    )
 
     expect(container.querySelector('img')).toHaveAttribute(
       'src',
@@ -23,7 +31,11 @@ describe('<Product.component />', () => {
   })
 
   it('should render product image alt', () => {
-    const { container } = render(<Product.component product={Data.Product.a} />)
+    const handlers = createHandlers()
+
+    const { container } = render(
+      <Product.component product={Data.Product.a} {...handlers} />
+    )
 
     expect(container.querySelector('img')).toHaveAttribute(
       'alt',
@@ -32,16 +44,20 @@ describe('<Product.component />', () => {
   })
 
   it('should render product name', () => {
+    const handlers = createHandlers()
+
     const { queryByText } = render(
-      <Product.component product={Data.Product.a} />
+      <Product.component product={Data.Product.a} {...handlers} />
     )
 
     expect(queryByText(Data.Product.a.name)).not.toBeNull()
   })
 
   it('should render price', () => {
+    const handlers = createHandlers()
+
     const { queryByText } = render(
-      <Product.component product={Data.Product.a} />
+      <Product.component product={Data.Product.a} {...handlers} />
     )
 
     expect(
@@ -51,33 +67,31 @@ describe('<Product.component />', () => {
 
   describe('when click on add to cart button', () => {
     it('should call onAddProductToCart callback', () => {
-      const onAddProductToCart = jest.fn()
+      const handlers = createHandlers({
+        onAddProductToCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Product.component
-          product={Data.Product.a}
-          onAddProductToCart={onAddProductToCart}
-        />
+        <Product.component product={Data.Product.a} {...handlers} />
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
-      expect(onAddProductToCart).toBeCalled()
+      expect(handlers.onAddProductToCart).toBeCalled()
     })
 
     it('should apply correct product ID to onAddProductToCart callback', () => {
-      const onAddProductToCart = jest.fn()
+      const handlers = createHandlers({
+        onAddProductToCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Product.component
-          product={Data.Product.a}
-          onAddProductToCart={onAddProductToCart}
-        />
+        <Product.component product={Data.Product.a} {...handlers} />
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
-      expect(onAddProductToCart).toBeCalledWith(Data.Product.a.id)
+      expect(handlers.onAddProductToCart).toBeCalledWith(Data.Product.a.id)
     })
   })
 })

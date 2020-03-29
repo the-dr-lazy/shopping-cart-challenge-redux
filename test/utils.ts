@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import * as TestingLibrary from '@testing-library/react'
 
 import { Environment } from '~/environment'
+import { Handlers } from '~/handlers'
 
 type CreateReducerSpec<TState, TAction extends AnyAction> = {
   action: TAction
@@ -86,4 +87,8 @@ export function render(
     wrapper: MemoryRouter,
     container: document.body.appendChild(element),
   })
+}
+
+export function createHandlers(handlers: Partial<Handlers> = {}) {
+  return <any>handlers
 }

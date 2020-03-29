@@ -4,7 +4,7 @@ import { fireEvent } from '@testing-library/react'
 import * as Cart from '~/components/cart'
 
 import * as Data from '../data'
-import { render } from '../utils'
+import { render, createHandlers } from '../utils'
 
 describe('<Cart.mini />', () => {
   describe('when the sum of the cart quantity is zero', () => {
@@ -34,8 +34,10 @@ describe('<Cart.mini />', () => {
 
 describe('<Cart.row />', () => {
   it('should render product name', () => {
+    const handlers = createHandlers()
+
     const { queryByText } = render(
-      <Cart.row product={Data.Product.a} quantity={2} />,
+      <Cart.row product={Data.Product.a} quantity={2} {...handlers} />,
       'tbody'
     )
 
@@ -45,8 +47,10 @@ describe('<Cart.row />', () => {
   })
 
   it('should render product quantity', () => {
+    const handlers = createHandlers()
+
     const { queryByText } = render(
-      <Cart.row product={Data.Product.a} quantity={3} />,
+      <Cart.row product={Data.Product.a} quantity={3} {...handlers} />,
       'tbody'
     )
 
@@ -54,8 +58,10 @@ describe('<Cart.row />', () => {
   })
 
   it('should render product price', () => {
+    const handlers = createHandlers()
+
     const { queryByText } = render(
-      <Cart.row product={Data.Product.a} quantity={3} />,
+      <Cart.row product={Data.Product.a} quantity={3} {...handlers} />,
       'tbody'
     )
 
@@ -65,8 +71,10 @@ describe('<Cart.row />', () => {
   })
 
   it('should render total price', () => {
+    const handlers = createHandlers()
+
     const { queryByText } = render(
-      <Cart.row product={Data.Product.b} quantity={5} />,
+      <Cart.row product={Data.Product.b} quantity={5} {...handlers} />,
       'tbody'
     )
 
@@ -79,14 +87,10 @@ describe('<Cart.row />', () => {
 
   describe('when quantity is one', () => {
     it('should disable decrease quantity button', () => {
-      const onRemoveProductFromCart = jest.fn()
+      const handlers = createHandlers({})
 
       const { queryByLabelText } = render(
-        <Cart.row
-          product={Data.Product.a}
-          quantity={1}
-          onRemoveProductFromCart={onRemoveProductFromCart}
-        />,
+        <Cart.row product={Data.Product.a} quantity={1} {...handlers} />,
         'tbody'
       )
 
@@ -96,109 +100,97 @@ describe('<Cart.row />', () => {
 
   describe('when click on increment quantity button', () => {
     it('should call onAddProductToCart callback', () => {
-      const onAddProductToCart = jest.fn()
+      const handlers = createHandlers({
+        onAddProductToCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Cart.row
-          product={Data.Product.a}
-          quantity={1}
-          onAddProductToCart={onAddProductToCart}
-        />,
+        <Cart.row product={Data.Product.a} quantity={1} {...handlers} />,
         'tbody'
       )
 
       fireEvent.click(getByLabelText(/increase quantity/i))
 
-      expect(onAddProductToCart).toBeCalled()
+      expect(handlers.onAddProductToCart).toBeCalled()
     })
 
     it('should apply correct product ID to onAddProductToCart callback', () => {
-      const onAddProductToCart = jest.fn()
+      const handlers = createHandlers({
+        onAddProductToCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Cart.row
-          product={Data.Product.b}
-          quantity={1}
-          onAddProductToCart={onAddProductToCart}
-        />,
+        <Cart.row product={Data.Product.b} quantity={1} {...handlers} />,
         'tbody'
       )
 
       fireEvent.click(getByLabelText(/increase quantity/i))
 
-      expect(onAddProductToCart).toBeCalledWith(Data.Product.b.id)
+      expect(handlers.onAddProductToCart).toBeCalledWith(Data.Product.b.id)
     })
   })
 
   describe('when click on decrement quantity button', () => {
     it('should call onRemoveProductFromCart callback', () => {
-      const onRemoveProductFromCart = jest.fn()
+      const handlers = createHandlers({
+        onRemoveProductFromCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Cart.row
-          product={Data.Product.a}
-          quantity={2}
-          onRemoveProductFromCart={onRemoveProductFromCart}
-        />,
+        <Cart.row product={Data.Product.a} quantity={2} {...handlers} />,
         'tbody'
       )
 
       fireEvent.click(getByLabelText(/decrease quantity/i))
 
-      expect(onRemoveProductFromCart).toBeCalled()
+      expect(handlers.onRemoveProductFromCart).toBeCalled()
     })
 
     it('should apply correct product ID to onRemoveProductFromCart callback', () => {
-      const onRemoveProductFromCart = jest.fn()
+      const handlers = createHandlers({
+        onRemoveProductFromCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Cart.row
-          product={Data.Product.b}
-          quantity={2}
-          onRemoveProductFromCart={onRemoveProductFromCart}
-        />,
+        <Cart.row product={Data.Product.b} quantity={2} {...handlers} />,
         'tbody'
       )
 
       fireEvent.click(getByLabelText(/decrease quantity/i))
 
-      expect(onRemoveProductFromCart).toBeCalledWith(Data.Product.b.id)
+      expect(handlers.onRemoveProductFromCart).toBeCalledWith(Data.Product.b.id)
     })
   })
 
   describe('when click on remove from the cart button', () => {
     it('should call onRemoveProductFromCart callback', () => {
-      const onAbsoluteRemoveProductFromCart = jest.fn()
+      const handlers = createHandlers({
+        onRemoveProductFromCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Cart.row
-          product={Data.Product.a}
-          quantity={1}
-          onRemoveProductFromCart={onAbsoluteRemoveProductFromCart}
-        />,
+        <Cart.row product={Data.Product.a} quantity={1} {...handlers} />,
         'tbody'
       )
 
       fireEvent.click(getByLabelText(/remove product/i))
 
-      expect(onAbsoluteRemoveProductFromCart).toBeCalled()
+      expect(handlers.onRemoveProductFromCart).toBeCalled()
     })
 
     it('should apply correct product ID to onRemoveProductFromCart callback', () => {
-      const onAbsoluteRemoveProductFromCart = jest.fn()
+      const handlers = createHandlers({
+        onRemoveProductFromCart: jest.fn(),
+      })
 
       const { getByLabelText } = render(
-        <Cart.row
-          product={Data.Product.b}
-          quantity={1}
-          onRemoveProductFromCart={onAbsoluteRemoveProductFromCart}
-        />,
+        <Cart.row product={Data.Product.b} quantity={1} {...handlers} />,
         'tbody'
       )
 
       fireEvent.click(getByLabelText(/remove product/i))
 
-      expect(onAbsoluteRemoveProductFromCart).toBeCalledWith(
+      expect(handlers.onRemoveProductFromCart).toBeCalledWith(
         Data.Product.b.id,
         true
       )

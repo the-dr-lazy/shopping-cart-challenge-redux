@@ -3,9 +3,11 @@ import React from 'react'
 import * as Cart from '~/pages/cart'
 
 import * as Data from '../data'
-import { render } from '../utils'
+import { render, createHandlers } from '../utils'
 
 describe('<Cart.component />', () => {
+  const handlers = createHandlers()
+
   describe('when products are loading', () => {
     it('should render loading message', () => {
       const { queryByText } = render(
@@ -14,6 +16,7 @@ describe('<Cart.component />', () => {
             cart: {},
             products: { isLoading: true, items: [] },
           }}
+          {...handlers}
         />
       )
 
@@ -29,6 +32,7 @@ describe('<Cart.component />', () => {
             cart: {},
             products: { isLoading: false, items: [] },
           }}
+          {...handlers}
         />
       )
 
@@ -44,6 +48,7 @@ describe('<Cart.component />', () => {
             cart: {},
             products: { isLoading: false, items: [] },
           }}
+          {...handlers}
         />
       )
 
@@ -59,6 +64,7 @@ describe('<Cart.component />', () => {
             cart: { [Data.Product.a.id]: 3 },
             products: { isLoading: false, items: [Data.Product.a] },
           }}
+          {...handlers}
         />
       )
 
@@ -74,6 +80,7 @@ describe('<Cart.component />', () => {
             cart: { [Data.Product.a.id]: 3 },
             products: { isLoading: false, items: [Data.Product.a] },
           }}
+          {...handlers}
         />
       )
 
