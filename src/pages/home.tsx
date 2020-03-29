@@ -22,7 +22,7 @@ export function component({ state, onAddProductToCart }: Props) {
     <div>
       <Cart.mini cartQuantitySum={Store.getCartQuantitySum(state)} />
 
-      {products.isLoading && <p>Loading</p>}
+      {products.isLoading && <p>Loading...</p>}
       <ul>{list}</ul>
     </div>
   )
