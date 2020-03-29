@@ -5,7 +5,7 @@ import * as Cart from '~/pages/cart'
 import * as Data from '../data'
 import { render, mkHandlers, mkState } from '../utils'
 
-describe('<Cart.component />', () => {
+describe('Page.Cart.component', () => {
   const handlers = mkHandlers()
 
   describe('when products are loading', () => {

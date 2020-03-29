@@ -7,11 +7,13 @@ describe('Utils', () => {
         expect(singularNounToPluralByQuantity(0, 'x')).toBe('x')
       })
     })
+
     describe('when quantity is one', () => {
       it('should return singular noun', () => {
         expect(singularNounToPluralByQuantity(1, 'x')).toBe('x')
       })
     })
+
     describe('when quantity is greater', () => {
       it('should return plural noun', () => {
         expect(singularNounToPluralByQuantity(2, 'x')).toBe('xs')

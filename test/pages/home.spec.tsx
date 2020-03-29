@@ -5,7 +5,7 @@ import * as Home from '~/pages/home'
 import * as Data from '../data'
 import { render, mkHandlers, mkState } from '../utils'
 
-describe('<Home.component />', () => {
+describe('Page.Home.component', () => {
   const handlers = mkHandlers()
 
   describe('when products are loading', () => {

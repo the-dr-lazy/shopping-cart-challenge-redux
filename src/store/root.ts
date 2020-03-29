@@ -24,7 +24,7 @@ export function mkCartEntity(product: Product) {
 }
 
 //
-// Reducer
+// Reducers
 //
 
 export type State = ReturnType<typeof reducer>
@@ -35,13 +35,13 @@ export const reducer = combineReducers({
 })
 
 //
-// Epic
+// Epics
 //
 
 export const epic = combineEpics(Products.epic)
 
 //
-// Selector
+// Selectors
 //
 
 export function getIsProductsLoading({ products }: State) {

@@ -6,7 +6,7 @@ import * as Product from '~/components/product'
 import * as Data from '../data'
 import { render, mkHandlers } from '../utils'
 
-describe('<Product.component  {...handlers} />', () => {
+describe('Component.Product.component', () => {
   it('should render product image', () => {
     const handlers = mkHandlers()
 

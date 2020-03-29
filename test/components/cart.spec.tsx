@@ -8,7 +8,7 @@ import * as Data from '../data'
 import { render, mkHandlers } from '../utils'
 import { mkCartEntity } from '~/store/root'
 
-describe('<Cart.mini />', () => {
+describe('Component.Cart.mini', () => {
   describe('when the sum of the cart quantity is zero', () => {
     const { container } = render(<Cart.mini cartQuantitySum={0} />)
 
@@ -34,7 +34,7 @@ describe('<Cart.mini />', () => {
   })
 })
 
-describe('<Cart.row />', () => {
+describe('Component.Cart.row', () => {
   it('should render product name', () => {
     const handlers = mkHandlers()
 
