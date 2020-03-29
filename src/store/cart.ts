@@ -16,11 +16,12 @@ export type Quantity = number
 export const clearCart = createActionCreator('[Cart] clear')
 export const addProductToCart = createActionCreator(
   '[Cart] add product',
-  (resolve) => (id: number) => resolve(id)
+  (resolve) => (productId: number) => resolve(productId)
 )
 export const removeProductFromCart = createActionCreator(
   '[Cart] remove product',
-  (resolve) => (id: number) => resolve(id)
+  (resolve) => (productId: number, absolute = false) =>
+    resolve({ productId, absolute })
 )
 
 //
@@ -38,11 +39,18 @@ export const reducer = createReducer(initialState, (handleAction) => [
     [payload]: R.inc(state[payload] || 0),
   })),
   handleAction(removeProductFromCart, (state, { payload }) => {
-    const quantity = state[payload]
+    const { productId, absolute } = payload
+    const dissociated = R.dissoc<State>(productId.toString(), state)
+
+    if (absolute) {
+      return dissociated
+    }
+
+    const quantity = state[productId]
 
     return {
-      ...R.dissoc<State>(payload.toString(), state),
-      ...(quantity > 1 ? { [payload]: R.dec(quantity) } : {}),
+      ...dissociated,
+      ...(quantity > 1 ? { [productId]: R.dec(quantity) } : {}),
     }
   }),
 ])

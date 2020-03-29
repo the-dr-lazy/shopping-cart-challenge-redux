@@ -63,6 +63,15 @@ describe('Store.Cart', () => {
       )
 
       it(
+        'should handle remove similar product from the cart absolutely',
+        createReducerTest(reducer, {
+          state,
+          action: removeProductFromCart(Data.Product.a.id, true),
+          expected: {},
+        })
+      )
+
+      it(
         'should handle clear cart',
         createReducerTest(reducer, {
           state,
@@ -103,6 +112,15 @@ describe('Store.Cart', () => {
       )
 
       it(
+        'should handle remove product from the cart absolutely',
+        createReducerTest(reducer, {
+          state,
+          action: removeProductFromCart(Data.Product.a.id, true),
+          expected: {},
+        })
+      )
+
+      it(
         'should handle clear cart',
         createReducerTest(reducer, {
           state,
@@ -114,6 +132,15 @@ describe('Store.Cart', () => {
 
     describe('when there is many products in the cart', () => {
       const state = { [Data.Product.a.id]: 11, [Data.Product.b.id]: 6 }
+
+      it(
+        'should handle remove product from the cart absolutely',
+        createReducerTest(reducer, {
+          state,
+          action: removeProductFromCart(Data.Product.b.id, true),
+          expected: { [Data.Product.a.id]: 11 },
+        })
+      )
 
       it(
         'should handle clear cart',
