@@ -1,8 +1,4 @@
 {
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ],
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es5",
@@ -20,6 +16,7 @@
     "importHelpers": true,
     "baseUrl": "./src",
     "outDir": "./build",
+    "sourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
