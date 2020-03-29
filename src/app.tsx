@@ -1,8 +1,8 @@
 import React from 'react'
-import { identity } from 'fp-ts/lib/function'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
+import * as Store from '~/store'
 import { Home, Cart } from '~/pages'
 import { Handlers } from '~/handlers'
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export function component({ handlers }: Props) {
-  const state = useSelector(identity)
+  const state = useSelector(Store.getState)
 
   React.useEffect(() => {
     handlers.onFetchProducts()

@@ -26,6 +26,7 @@ export {
   Quantity,
 } from './cart'
 export {
+  getState,
   getIsProductsLoading,
   getProduct,
   getProducts,

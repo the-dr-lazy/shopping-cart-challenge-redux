@@ -3,6 +3,7 @@ import * as O from 'fp-ts/lib/Option'
 import * as A from 'fp-ts/lib/ReadonlyArray'
 import { Option } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
+import { identity } from 'fp-ts/lib/function'
 import { combineReducers } from 'redux'
 import { combineEpics } from 'redux-observable'
 
@@ -43,6 +44,8 @@ export const epic = combineEpics(Products.epic)
 //
 // Selectors
 //
+
+export const getState: (state: State) => State = identity
 
 export function getIsProductsLoading({ products }: State) {
   return Products.getIsProductsLoading(products)
