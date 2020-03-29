@@ -3,14 +3,14 @@ import React from 'react'
 import * as Cart from '~/pages/cart'
 
 import * as Data from '../data'
-import { render, createHandlers, createState } from '../utils'
+import { render, mkHandlers, mkState } from '../utils'
 
 describe('<Cart.component />', () => {
-  const handlers = createHandlers()
+  const handlers = mkHandlers()
 
   describe('when products are loading', () => {
     it('should render loading message', () => {
-      const state = createState({
+      const state = mkState({
         products: { isLoading: true },
       })
 
@@ -23,7 +23,7 @@ describe('<Cart.component />', () => {
   })
 
   describe('when cart is empty', () => {
-    const state = createState({
+    const state = mkState({
       cart: {},
     })
 
@@ -53,7 +53,7 @@ describe('<Cart.component />', () => {
   })
 
   describe('when cart has product(s)', () => {
-    const state = createState({
+    const state = mkState({
       cart: { [Data.Product.a.id]: 3 },
       products: { isLoading: false, items: [Data.Product.a] },
     })

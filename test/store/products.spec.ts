@@ -11,14 +11,14 @@ import {
 } from '~/store/products'
 
 import * as Data from '../data'
-import { createReducerTest, createEpicTest, createEnvironment } from '../utils'
+import { mkReducerTest, mkEpicTest, mkEnvironment } from '../utils'
 
 describe('Store.Products', () => {
   describe('reducers', () => {
     describe('isLoadingReducer', () => {
       it(
         'should handle fetch next',
-        createReducerTest(isLoadingReducer, {
+        mkReducerTest(isLoadingReducer, {
           state: false,
           action: fetchProducts.next(),
           expected: true,
@@ -26,7 +26,7 @@ describe('Store.Products', () => {
       )
       it(
         'should handle fetch error',
-        createReducerTest(isLoadingReducer, {
+        mkReducerTest(isLoadingReducer, {
           state: true,
           action: fetchProducts.error(),
           expected: false,
@@ -34,7 +34,7 @@ describe('Store.Products', () => {
       )
       it(
         'should handle fetch complete',
-        createReducerTest(isLoadingReducer, {
+        mkReducerTest(isLoadingReducer, {
           state: true,
           action: fetchProducts.complete([Data.Product.a]),
           expected: false,
@@ -46,7 +46,7 @@ describe('Store.Products', () => {
       describe('when there is no products', () => {
         it(
           'should handle fetch complete',
-          createReducerTest(itemsReducer, {
+          mkReducerTest(itemsReducer, {
             state: [],
             action: fetchProducts.complete([Data.Product.a]),
             expected: [Data.Product.a],
@@ -57,7 +57,7 @@ describe('Store.Products', () => {
       describe('when there is any products', () => {
         it(
           'should handle fetch complete',
-          createReducerTest(itemsReducer, {
+          mkReducerTest(itemsReducer, {
             state: [Data.Product.a],
             action: fetchProducts.complete([Data.Product.b]),
             expected: [Data.Product.b],
@@ -180,7 +180,7 @@ describe('Store.Products', () => {
   describe('epics', () => {
     describe('fetchProductsEpic', () => {
       describe('when API responses with products', () => {
-        const environment = createEnvironment({
+        const environment = mkEnvironment({
           API: {
             fetchProducts: of([Data.Product.a]),
           },
@@ -188,7 +188,7 @@ describe('Store.Products', () => {
 
         it(
           'should output fetch complete',
-          createEpicTest(fetchProductsEpic, environment, {
+          mkEpicTest(fetchProductsEpic, environment, {
             marbles: {
               action: '  -n-',
               expected: '-c-',
@@ -206,7 +206,7 @@ describe('Store.Products', () => {
       })
 
       describe('when API responses with error', () => {
-        const environment = createEnvironment({
+        const environment = mkEnvironment({
           API: {
             fetchProducts: throwError('!'),
           },
@@ -214,7 +214,7 @@ describe('Store.Products', () => {
 
         it(
           'should output fetch error',
-          createEpicTest(fetchProductsEpic, environment, {
+          mkEpicTest(fetchProductsEpic, environment, {
             marbles: {
               action: '  -n-',
               expected: '-e-',

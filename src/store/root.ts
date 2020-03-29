@@ -19,7 +19,7 @@ import { Quantity } from './cart'
 
 export type CartEntity = Product & { quantity: Cart.Quantity }
 
-export function createCartEntity(product: Product) {
+export function mkCartEntity(product: Product) {
   return (quantity: Quantity) => ({ ...product, quantity })
 }
 
@@ -78,7 +78,7 @@ export function getCartEntity(
   const product = getProduct(productId, state)
   const quantity = getCartQuantity(productId, state)
 
-  return pipe(product, O.map(createCartEntity), O.ap(quantity))
+  return pipe(product, O.map(mkCartEntity), O.ap(quantity))
 }
 
 export function getCartEntities(state: State) {

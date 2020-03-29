@@ -1,18 +1,18 @@
 import {
-  createCartEntity,
+  mkCartEntity,
   getCartEntity,
   getCartEntities,
   getCartTotalPrice,
 } from '~/store/root'
 
 import * as Data from '../data'
-import { createState } from '../utils'
+import { mkState } from '../utils'
 
 describe('Store.Root', () => {
   describe('data constructors', () => {
-    describe('createCartEntity', () => {
+    describe('mkCartEntity', () => {
       it('should be curried', () => {
-        expect(createCartEntity(Data.Product.a)).toBeInstanceOf(Function)
+        expect(mkCartEntity(Data.Product.a)).toBeInstanceOf(Function)
       })
 
       it('should return correct CartEntity', () => {
@@ -21,7 +21,7 @@ describe('Store.Root', () => {
           ...Data.Product.a,
         }
 
-        expect(createCartEntity(Data.Product.a)(3)).toEqual(expected)
+        expect(mkCartEntity(Data.Product.a)(3)).toEqual(expected)
       })
     })
   })
@@ -29,7 +29,7 @@ describe('Store.Root', () => {
   describe('selectors', () => {
     describe('getCartTotalPrice', () => {
       it('should return zero for empty cart', () => {
-        const state = createState({
+        const state = mkState({
           cart: {},
           products: { items: [Data.Product.a] },
         })
@@ -38,7 +38,7 @@ describe('Store.Root', () => {
       })
 
       it('should calculate total price of non-empty cart', () => {
-        const state = createState({
+        const state = mkState({
           cart: { [Data.Product.a.id]: 2, [Data.Product.b.id]: 5 },
           products: {
             items: [Data.Product.a, Data.Product.b],
@@ -52,7 +52,7 @@ describe('Store.Root', () => {
 
     describe('getCartEntity', () => {
       it('should return None when there is not any corresponding product in the cart', () => {
-        const state = createState({
+        const state = mkState({
           cart: {},
           products: { items: [Data.Product.a] },
         })
@@ -61,7 +61,7 @@ describe('Store.Root', () => {
       })
 
       it('should return Some(CartEntity) when the product exists in the cart', () => {
-        const state = createState({
+        const state = mkState({
           cart: { [Data.Product.a.id]: 3 },
           products: { items: [Data.Product.a, Data.Product.b] },
         })
@@ -73,7 +73,7 @@ describe('Store.Root', () => {
 
     describe('getCartEntities', () => {
       it('should return empty array for empty cart', () => {
-        const state = createState({
+        const state = mkState({
           cart: {},
           products: { items: [Data.Product.a] },
         })
@@ -82,7 +82,7 @@ describe('Store.Root', () => {
       })
 
       it('should return cart entities for non-empty cart', () => {
-        const state = createState({
+        const state = mkState({
           cart: {
             [Data.Product.a.id]: 2,
             [Data.Product.b.id]: 5,

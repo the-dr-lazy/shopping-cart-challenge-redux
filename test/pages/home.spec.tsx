@@ -3,13 +3,13 @@ import React from 'react'
 import * as Home from '~/pages/home'
 
 import * as Data from '../data'
-import { render, createHandlers, createState } from '../utils'
+import { render, mkHandlers, mkState } from '../utils'
 
 describe('<Home.component />', () => {
-  const handlers = createHandlers()
+  const handlers = mkHandlers()
 
   describe('when products are loading', () => {
-    const state = createState({
+    const state = mkState({
       products: { isLoading: true },
     })
 
@@ -31,7 +31,7 @@ describe('<Home.component />', () => {
   })
 
   describe('when products has been loaded', () => {
-    const state = createState({
+    const state = mkState({
       products: {
         items: [Data.Product.a, Data.Product.b],
       },

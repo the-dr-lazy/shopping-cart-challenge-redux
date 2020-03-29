@@ -19,6 +19,6 @@ const handlers = {
   onClearCart: Store.clearCart,
 }
 
-export function createHandlers(store: Redux.Store) {
+export function mkHandlers(store: Redux.Store) {
   return Redux.bindActionCreators(handlers, store.dispatch)
 }

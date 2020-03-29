@@ -27,7 +27,7 @@ type CreateReducerSpec<TState, TAction extends AnyAction> = {
   expected: TState
 }
 
-export function createReducerTest<TState, TAction extends AnyAction>(
+export function mkReducerTest<TState, TAction extends AnyAction>(
   reducer: (state: TState, action: TAction) => TState,
   { state, action, expected }: CreateReducerSpec<TState, TAction>
 ) {
@@ -42,20 +42,20 @@ type CreateEpicTestSpec<
   TInput extends AnyAction,
   TOutput extends AnyAction,
   TState
-  > = {
-    marbles: {
-      state?: string
-      action: string
-      expected: string
-    }
-    values: {
-      state?: { [key: string]: TState }
-      action: { [key: string]: TInput }
-      expected: { [key: string]: TOutput }
-    }
+> = {
+  marbles: {
+    state?: string
+    action: string
+    expected: string
   }
+  values: {
+    state?: { [key: string]: TState }
+    action: { [key: string]: TInput }
+    expected: { [key: string]: TOutput }
+  }
+}
 
-export function createEpicTest<
+export function mkEpicTest<
   TInput extends AnyAction,
   TOutput extends AnyAction,
   TState,
@@ -84,7 +84,7 @@ type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T
 
-export function createEnvironment(
+export function mkEnvironment(
   environment: DeepPartial<Environment>
 ): Environment {
   return <any>environment
@@ -102,10 +102,10 @@ export function render(
   })
 }
 
-export function createHandlers(handlers: Partial<Handlers> = {}) {
+export function mkHandlers(handlers: Partial<Handlers> = {}) {
   return <any>handlers
 }
 
-export function createState(state: DeepPartial<State> = {}): State {
+export function mkState(state: DeepPartial<State> = {}): State {
   return <any>merge(reducer(undefined, { type: '@@INIT' }), state)
 }

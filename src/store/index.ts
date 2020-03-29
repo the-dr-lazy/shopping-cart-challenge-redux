@@ -5,7 +5,7 @@ import { Environment } from '~/environment'
 
 import { reducer, epic } from './root'
 
-export function createStore(environment: Environment) {
+export function mkStore(environment: Environment) {
   const epicMiddleware = createEpicMiddleware({ dependencies: environment })
 
   const store = Redux.createStore(
