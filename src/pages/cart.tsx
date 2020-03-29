@@ -55,7 +55,7 @@ export function component({
       >
         Remove All
       </button>
-      <h1>Total ${totalPrice}</h1>
+      <h1 data-testid="total-price">Total ${totalPrice}</h1>
     </div>
   )
 }

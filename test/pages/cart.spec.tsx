@@ -39,16 +39,18 @@ describe('Page.Cart.component', () => {
 
     it('should disable remove all button', () => {
       const { getByLabelText } = render(
-        <Cart.component
-          state={{
-            cart: {},
-            products: { isLoading: false, items: [] },
-          }}
-          {...handlers}
-        />
+        <Cart.component state={state} {...handlers} />
       )
 
       expect(getByLabelText(/remove all/i)).toBeDisabled()
+    })
+
+    it('should render total price', () => {
+      const { getByTestId } = render(
+        <Cart.component state={state} {...handlers} />
+      )
+
+      expect(getByTestId('total-price')).toHaveTextContent('$0')
     })
   })
 
@@ -74,6 +76,16 @@ describe('Page.Cart.component', () => {
       )
 
       expect(getByLabelText(/remove all/i)).toBeEnabled()
+    })
+
+    it('should render total price', () => {
+      const { getByTestId } = render(
+        <Cart.component state={state} {...handlers} />
+      )
+
+      expect(getByTestId('total-price')).toHaveTextContent(
+        '$' + Data.Product.a.price * 3
+      )
     })
   })
 })
