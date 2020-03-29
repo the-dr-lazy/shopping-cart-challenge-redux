@@ -1,12 +1,9 @@
 import React from 'react'
 
 import * as Store from '~/store'
-import { Handlers } from '~/handlers'
+import { PropsWithHandlers } from '~/handlers'
 
-type Props = {
-  product: Store.Product
-  onAddProductToCart?: Handlers['onAddProductToCart']
-}
+type Props = PropsWithHandlers<{ product: Store.Product }, 'onAddProductToCart'>
 
 export function component({ product, onAddProductToCart }: Props) {
   function handleAddToCartButtonClick() {

@@ -2,15 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import * as Store from '~/store'
-import { Handlers } from '~/handlers'
+import { PropsWithHandlers } from '~/handlers'
 import { Cart } from '~/components'
 
-type Props = {
-  state: Store.State
-  onAddProductToCart?: Handlers['onAddProductToCart']
-  onRemoveProductFromCart?: Handlers['onRemoveProductFromCart']
-  onClearCart?: Handlers['onClearCart']
-}
+type Props = PropsWithHandlers<
+  { state: Store.State },
+  'onAddProductToCart' | 'onRemoveProductFromCart' | 'onClearCart'
+>
 
 const loading = (
   <div>

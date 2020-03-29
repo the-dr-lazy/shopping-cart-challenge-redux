@@ -9,6 +9,9 @@ export type Handlers = {
   onClearCart(): void
 }
 
+export type PropsWithHandlers<T, K extends keyof Handlers> = T &
+  Pick<Handlers, K>
+
 const handlers = {
   onFetchProducts: Store.fetchProducts.next,
   onAddProductToCart: Store.addProductToCart,

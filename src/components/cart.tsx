@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import * as Store from '~/store'
-import { Handlers } from '~/handlers'
+import { PropsWithHandlers } from '~/handlers'
 import { singularNounToPluralByQuantity } from '~/utils'
 
 type MiniProps = {
@@ -24,12 +24,13 @@ export function mini({ cartQuantitySum }: MiniProps) {
   )
 }
 
-type RowProps = {
-  product: Store.Product
-  quantity: number
-  onAddProductToCart?: Handlers['onAddProductToCart']
-  onRemoveProductFromCart?: Handlers['onRemoveProductFromCart']
-}
+type RowProps = PropsWithHandlers<
+  {
+    product: Store.Product
+    quantity: number
+  },
+  'onAddProductToCart' | 'onRemoveProductFromCart'
+>
 
 export function row({
   product,
