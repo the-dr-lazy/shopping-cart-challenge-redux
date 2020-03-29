@@ -1,6 +1,9 @@
+import { ReactElement } from 'react'
 import { AnyAction } from 'deox'
 import { Observable } from 'rxjs'
 import { marbles } from 'rxjs-marbles/marbles'
+import { MemoryRouter } from 'react-router-dom'
+import * as TestingLibrary from '@testing-library/react'
 
 import { Environment } from '~/environment'
 
@@ -71,4 +74,16 @@ export function createEnvironment(
   environment: DeepPartial<Environment>
 ): Environment {
   return <any>environment
+}
+
+export function render(
+  reactElement: ReactElement,
+  tagName: keyof HTMLElementTagNameMap = 'div'
+) {
+  const element = document.createElement(tagName)
+
+  return TestingLibrary.render(reactElement, {
+    wrapper: MemoryRouter,
+    container: document.body.appendChild(element),
+  })
 }
