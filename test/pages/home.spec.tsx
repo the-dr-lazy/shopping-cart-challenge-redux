@@ -1,9 +1,9 @@
 import React from 'react'
-import { render } from '@testing-library/react'
 
 import * as Home from '~/pages/home'
 
 import * as Data from '../data'
+import { render } from '../utils'
 
 describe('<Home.component />', () => {
   describe('when products are loading', () => {

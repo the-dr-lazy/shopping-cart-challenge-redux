@@ -1,9 +1,10 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 
 import * as Product from '~/components/product'
 
 import * as Data from '../data'
+import { render } from '../utils'
 
 describe('<Product.component />', () => {
   it('should render product image', () => {
@@ -49,28 +50,34 @@ describe('<Product.component />', () => {
   })
 
   describe('when click on add to cart button', () => {
-    it('should call onAddToCart callback', () => {
-      const onAddToCart = jest.fn()
+    it('should call onAddProductToCart callback', () => {
+      const onAddProductToCart = jest.fn()
 
       const { getByLabelText } = render(
-        <Product.component product={Data.Product.a} onAddToCart={onAddToCart} />
+        <Product.component
+          product={Data.Product.a}
+          onAddProductToCart={onAddProductToCart}
+        />
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
-      expect(onAddToCart).toBeCalled()
+      expect(onAddProductToCart).toBeCalled()
     })
 
-    it('should apply correct product ID to onAddToCart callback', () => {
-      const onAddToCart = jest.fn()
+    it('should apply correct product ID to onAddProductToCart callback', () => {
+      const onAddProductToCart = jest.fn()
 
       const { getByLabelText } = render(
-        <Product.component product={Data.Product.a} onAddToCart={onAddToCart} />
+        <Product.component
+          product={Data.Product.a}
+          onAddProductToCart={onAddProductToCart}
+        />
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
-      expect(onAddToCart).toBeCalledWith(Data.Product.a.id)
+      expect(onAddProductToCart).toBeCalledWith(Data.Product.a.id)
     })
   })
 })

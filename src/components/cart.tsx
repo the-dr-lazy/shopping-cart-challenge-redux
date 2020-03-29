@@ -1,7 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-import { singularNounToPluralByQuantity } from '~/utils'
 import * as Store from '~/store'
+import { Handlers } from '~/handlers'
+import { singularNounToPluralByQuantity } from '~/utils'
 
 type MiniProps = {
   cartQuantitySum: number
@@ -14,37 +16,40 @@ export function mini({ cartQuantitySum }: MiniProps) {
       ? `You have ${cartQuantitySum} ${itemNoun} in your cart.`
       : `Your cart is empty.`
 
-  return <div>{message}</div>
+  return (
+    <div>
+      <Link to="/cart">Cart</Link>
+      <div>{message}</div>
+    </div>
+  )
 }
 
 type RowProps = {
   product: Store.Product
   quantity: number
-  onAddToCart?: (id: Store.ProductId) => void
-  onRemoveFromCart?: (id: Store.ProductId) => void
-  onAbsoluteRemoveFromCart?: (id: Store.ProductId) => void
+  onAddProductToCart?: Handlers['onAddProductToCart']
+  onRemoveProductFromCart?: Handlers['onRemoveProductFromCart']
 }
 
 export function row({
   product,
   quantity,
-  onAddToCart,
-  onRemoveFromCart,
-  onAbsoluteRemoveFromCart,
+  onAddProductToCart,
+  onRemoveProductFromCart,
 }: RowProps) {
   function handleIncrementQuantityButtonClick() {
-    onAddToCart!(product.id)
+    onAddProductToCart!(product.id)
   }
 
   function handleDecrementQuantityButtonClick() {
-    onRemoveFromCart!(product.id)
+    onRemoveProductFromCart!(product.id)
   }
 
-  function handleRemoveProductFromCartButtonClick() {
-    onAbsoluteRemoveFromCart!(product.id)
+  function handleRemoveProductButtonClick() {
+    onRemoveProductFromCart!(product.id, true)
   }
 
-  const incrementQuantityButton = onAddToCart && (
+  const incrementQuantityButton = onAddProductToCart && (
     <button
       aria-label="Increase quantity"
       onClick={handleIncrementQuantityButtonClick}
@@ -52,18 +57,19 @@ export function row({
       +1
     </button>
   )
-  const decrementQuantityButton = onRemoveFromCart && quantity > 1 && (
+  const decrementQuantityButton = onRemoveProductFromCart && (
     <button
       aria-label="Decrease quantity"
+      disabled={quantity <= 1}
       onClick={handleDecrementQuantityButtonClick}
     >
       -1
     </button>
   )
-  const removeProductFromCartButton = onAbsoluteRemoveFromCart && (
+  const removeProductButton = onRemoveProductFromCart && (
     <button
       aria-label="Remove product from cart"
-      onClick={handleRemoveProductFromCartButtonClick}
+      onClick={handleRemoveProductButtonClick}
     >
       Remove 🗑
     </button>
@@ -79,7 +85,7 @@ export function row({
         {[
           incrementQuantityButton,
           decrementQuantityButton,
-          removeProductFromCartButton,
+          removeProductButton,
         ]}
       </td>
     </tr>

@@ -1,18 +1,19 @@
 import React from 'react'
 
 import * as Store from '~/store'
+import { Handlers } from '~/handlers'
 
 type Props = {
   product: Store.Product
-  onAddToCart?: (id: Store.ProductId) => void
+  onAddProductToCart?: Handlers['onAddProductToCart']
 }
 
-export function component({ product, onAddToCart }: Props) {
+export function component({ product, onAddProductToCart }: Props) {
   function handleAddToCartButtonClick() {
-    onAddToCart!(product.id)
+    onAddProductToCart!(product.id)
   }
 
-  const addToCartButton = onAddToCart && (
+  const addToCartButton = onAddProductToCart && (
     <button aria-label="Add to cart" onClick={handleAddToCartButtonClick}>
       Add To Cart
     </button>

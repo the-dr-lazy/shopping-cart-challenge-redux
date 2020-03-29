@@ -1,9 +1,10 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 
 import * as Cart from '~/components/cart'
 
 import * as Data from '../data'
+import { render } from '../utils'
 
 describe('<Cart.mini />', () => {
   describe('when the sum of the cart quantity is zero', () => {
@@ -32,15 +33,10 @@ describe('<Cart.mini />', () => {
 })
 
 describe('<Cart.row />', () => {
-  function renderIntoTBody(reactElement: React.ReactElement) {
-    const tBody = document.createElement('tbody')
-
-    return render(reactElement, { container: document.body.appendChild(tBody) })
-  }
-
   it('should render product name', () => {
-    const { queryByText } = renderIntoTBody(
-      <Cart.row product={Data.Product.a} quantity={2} />
+    const { queryByText } = render(
+      <Cart.row product={Data.Product.a} quantity={2} />,
+      'tbody'
     )
 
     const element = queryByText(Data.Product.a.name, { exact: false })
@@ -49,16 +45,18 @@ describe('<Cart.row />', () => {
   })
 
   it('should render product quantity', () => {
-    const { queryByText } = renderIntoTBody(
-      <Cart.row product={Data.Product.a} quantity={3} />
+    const { queryByText } = render(
+      <Cart.row product={Data.Product.a} quantity={3} />,
+      'tbody'
     )
 
     expect(queryByText('3')).not.toBeNull()
   })
 
   it('should render product price', () => {
-    const { queryByText } = renderIntoTBody(
-      <Cart.row product={Data.Product.a} quantity={3} />
+    const { queryByText } = render(
+      <Cart.row product={Data.Product.a} quantity={3} />,
+      'tbody'
     )
 
     const element = queryByText(`$${Data.Product.a.price}`, { exact: false })
@@ -67,8 +65,9 @@ describe('<Cart.row />', () => {
   })
 
   it('should render total price', () => {
-    const { queryByText } = renderIntoTBody(
-      <Cart.row product={Data.Product.b} quantity={5} />
+    const { queryByText } = render(
+      <Cart.row product={Data.Product.b} quantity={5} />,
+      'tbody'
     )
 
     const element = queryByText(`$${Data.Product.b.price * 5}`, {
@@ -79,120 +78,130 @@ describe('<Cart.row />', () => {
   })
 
   describe('when quantity is one', () => {
-    it('should not render remove from the cart button', () => {
-      const onRemoveFromCart = jest.fn()
+    it('should disable decrease quantity button', () => {
+      const onRemoveProductFromCart = jest.fn()
 
-      const { queryByLabelText } = renderIntoTBody(
+      const { queryByLabelText } = render(
         <Cart.row
           product={Data.Product.a}
           quantity={1}
-          onRemoveFromCart={onRemoveFromCart}
-        />
+          onRemoveProductFromCart={onRemoveProductFromCart}
+        />,
+        'tbody'
       )
 
-      expect(queryByLabelText(/decrease quantity/i)).toBeNull()
+      expect(queryByLabelText(/decrease quantity/i)).toBeDisabled()
     })
   })
 
-  describe('when click on add to the cart button', () => {
-    it('should call onAddToCart callback', () => {
-      const onAddToCart = jest.fn()
+  describe('when click on increment quantity button', () => {
+    it('should call onAddProductToCart callback', () => {
+      const onAddProductToCart = jest.fn()
 
-      const { getByLabelText } = renderIntoTBody(
+      const { getByLabelText } = render(
         <Cart.row
           product={Data.Product.a}
           quantity={1}
-          onAddToCart={onAddToCart}
-        />
+          onAddProductToCart={onAddProductToCart}
+        />,
+        'tbody'
       )
 
       fireEvent.click(getByLabelText(/increase quantity/i))
 
-      expect(onAddToCart).toBeCalled()
+      expect(onAddProductToCart).toBeCalled()
     })
 
-    it('should apply correct product ID to onAddToCart callback', () => {
-      const onAddToCart = jest.fn()
+    it('should apply correct product ID to onAddProductToCart callback', () => {
+      const onAddProductToCart = jest.fn()
 
-      const { getByLabelText } = renderIntoTBody(
+      const { getByLabelText } = render(
         <Cart.row
           product={Data.Product.b}
           quantity={1}
-          onAddToCart={onAddToCart}
-        />
+          onAddProductToCart={onAddProductToCart}
+        />,
+        'tbody'
       )
 
       fireEvent.click(getByLabelText(/increase quantity/i))
 
-      expect(onAddToCart).toBeCalledWith(Data.Product.b.id)
+      expect(onAddProductToCart).toBeCalledWith(Data.Product.b.id)
+    })
+  })
+
+  describe('when click on decrement quantity button', () => {
+    it('should call onRemoveProductFromCart callback', () => {
+      const onRemoveProductFromCart = jest.fn()
+
+      const { getByLabelText } = render(
+        <Cart.row
+          product={Data.Product.a}
+          quantity={2}
+          onRemoveProductFromCart={onRemoveProductFromCart}
+        />,
+        'tbody'
+      )
+
+      fireEvent.click(getByLabelText(/decrease quantity/i))
+
+      expect(onRemoveProductFromCart).toBeCalled()
+    })
+
+    it('should apply correct product ID to onRemoveProductFromCart callback', () => {
+      const onRemoveProductFromCart = jest.fn()
+
+      const { getByLabelText } = render(
+        <Cart.row
+          product={Data.Product.b}
+          quantity={2}
+          onRemoveProductFromCart={onRemoveProductFromCart}
+        />,
+        'tbody'
+      )
+
+      fireEvent.click(getByLabelText(/decrease quantity/i))
+
+      expect(onRemoveProductFromCart).toBeCalledWith(Data.Product.b.id)
     })
   })
 
   describe('when click on remove from the cart button', () => {
-    it('should call onRemoveFromCart callback', () => {
-      const onRemoveFromCart = jest.fn()
+    it('should call onRemoveProductFromCart callback', () => {
+      const onAbsoluteRemoveProductFromCart = jest.fn()
 
-      const { getByLabelText } = renderIntoTBody(
-        <Cart.row
-          product={Data.Product.a}
-          quantity={2}
-          onRemoveFromCart={onRemoveFromCart}
-        />
-      )
-
-      fireEvent.click(getByLabelText(/decrease quantity/i))
-
-      expect(onRemoveFromCart).toBeCalled()
-    })
-
-    it('should apply correct product ID to onRemoveFromCart callback', () => {
-      const onRemoveFromCart = jest.fn()
-
-      const { getByLabelText } = renderIntoTBody(
-        <Cart.row
-          product={Data.Product.b}
-          quantity={2}
-          onRemoveFromCart={onRemoveFromCart}
-        />
-      )
-
-      fireEvent.click(getByLabelText(/decrease quantity/i))
-
-      expect(onRemoveFromCart).toBeCalledWith(Data.Product.b.id)
-    })
-  })
-
-  describe('when click on absolute remove from the cart button', () => {
-    it('should call onAbsoluteRemoveFromCart callback', () => {
-      const onAbsoluteRemoveFromCart = jest.fn()
-
-      const { getByLabelText } = renderIntoTBody(
+      const { getByLabelText } = render(
         <Cart.row
           product={Data.Product.a}
           quantity={1}
-          onAbsoluteRemoveFromCart={onAbsoluteRemoveFromCart}
-        />
+          onRemoveProductFromCart={onAbsoluteRemoveProductFromCart}
+        />,
+        'tbody'
       )
 
       fireEvent.click(getByLabelText(/remove product/i))
 
-      expect(onAbsoluteRemoveFromCart).toBeCalled()
+      expect(onAbsoluteRemoveProductFromCart).toBeCalled()
     })
 
-    it('should apply correct product ID to onAbsoluteRemoveFromCart callback', () => {
-      const onAbsoluteRemoveFromCart = jest.fn()
+    it('should apply correct product ID to onRemoveProductFromCart callback', () => {
+      const onAbsoluteRemoveProductFromCart = jest.fn()
 
-      const { getByLabelText } = renderIntoTBody(
+      const { getByLabelText } = render(
         <Cart.row
           product={Data.Product.b}
           quantity={1}
-          onAbsoluteRemoveFromCart={onAbsoluteRemoveFromCart}
-        />
+          onRemoveProductFromCart={onAbsoluteRemoveProductFromCart}
+        />,
+        'tbody'
       )
 
       fireEvent.click(getByLabelText(/remove product/i))
 
-      expect(onAbsoluteRemoveFromCart).toBeCalledWith(Data.Product.b.id)
+      expect(onAbsoluteRemoveProductFromCart).toBeCalledWith(
+        Data.Product.b.id,
+        true
+      )
     })
   })
 })

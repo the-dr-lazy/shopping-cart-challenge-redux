@@ -25,4 +25,9 @@ export {
   clearCart,
   Quantity,
 } from './cart'
-export { getCartQuantitySum, getCartEntries, getCartTotalPrice } from './root'
+export {
+  getCartQuantitySum,
+  getCartEntries,
+  getCartTotalPrice,
+  State,
+} from './root'
