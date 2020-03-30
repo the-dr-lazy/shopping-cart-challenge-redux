@@ -81,11 +81,9 @@ export function row({
       <td>${price}</td>
       <td>${quantity * price}</td>
       <td>
-        {[
-          incrementQuantityButton,
-          decrementQuantityButton,
-          removeProductButton,
-        ]}
+        {incrementQuantityButton}
+        {decrementQuantityButton}
+        {removeProductButton}}
       </td>
     </tr>
   )
