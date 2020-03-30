@@ -24,6 +24,7 @@ export function component({
 
   const rows = Store.getCartEntities(state).map((entity) => (
     <Cart.row
+      key={entity.id}
       entity={entity}
       onAddProductToCart={onAddProductToCart}
       onRemoveProductFromCart={onRemoveProductFromCart}

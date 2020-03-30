@@ -75,7 +75,7 @@ export function row({
   )
 
   return (
-    <tr key={id}>
+    <tr>
       <td>{name}</td>
       <td>{quantity}</td>
       <td>${price}</td>
