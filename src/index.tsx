@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
 import * as App from '~/app'
-import * as Store from '~/store'
-import { defaultEnvironment } from '~/environment'
+import { mkStore } from '~/store'
 import { mkHandlers } from '~/handlers'
+import { defaultEnvironment } from '~/environment'
 
 const rootElement = document.getElementById('root')
 
 function main() {
-  const store = Store.mkStore(defaultEnvironment)
+  const store = mkStore(defaultEnvironment)
   const handlers = mkHandlers(store)
 
   ReactDOM.render(
