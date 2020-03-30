@@ -1,9 +1,14 @@
-import { createActionCreator, createReducer } from 'deox'
-import * as R from 'fp-ts/lib/Record'
-import { increment, decrement, constant } from 'fp-ts/lib/function'
+import * as R from 'fp-ts/lib/ReadonlyRecord'
+import * as O from 'fp-ts/lib/Option'
+import { Option } from 'fp-ts/lib/Option'
 import { monoidSum } from 'fp-ts/lib/Monoid'
+import { increment, decrement, constant } from 'fp-ts/lib/function'
+import { pipe } from 'fp-ts/lib/pipeable'
+import { createActionCreator, createReducer } from 'deox'
 
-import { Product, ProductId } from './products'
+import { constZero } from '~/utils'
+
+import { ProductId } from './products'
 
 //
 // Data Types
@@ -43,7 +48,7 @@ export const removeProductFromCart = createActionCreator(
 // Reducers
 //
 
-export type State = Record<ProductId, Quantity>
+export type State = R.ReadonlyRecord<ProductId, Quantity>
 
 const initialState: State = {}
 
@@ -52,32 +57,56 @@ export const reducer = createReducer(initialState, (handleAction) => [
 
   handleAction(addProductToCart, (state, { payload }) => ({
     ...state,
-    [payload]: increment(state[payload] || 0),
+    [payload]: incrementQuantity(payload, state),
   })),
 
   handleAction(removeProductFromCart, (state, { payload }) => {
     const { productId, absolute } = payload
     const dissociated = R.deleteAt(productId)(state)
 
-    if (absolute) {
+    const quantity = getCartQuantity(productId, state, true)
+
+    if (absolute || quantity <= 1) {
       return dissociated
     }
 
-    const quantity = state[productId]
-
     return {
       ...dissociated,
-      ...(quantity > 1 ? { [productId]: decrement(quantity) } : {}),
+      [productId]: decrement(quantity),
     }
   }),
 ])
+
+function incrementQuantity(productId: ProductId, state: State) {
+  return pipe(getCartQuantity(productId, state, true), increment)
+}
 
 //
 // Selectors
 //
 
-export function getCartQuantity(productId: ProductId, state: State) {
-  return R.lookup(productId, state)
+export function getCartQuantity(
+  productId: ProductId,
+  state: State,
+  isomorphism: true
+): Quantity
+export function getCartQuantity(
+  productId: ProductId,
+  state: State,
+  isomorphism: false
+): Option<Quantity>
+export function getCartQuantity(
+  productId: ProductId,
+  state: State
+): Option<Quantity>
+export function getCartQuantity(
+  productId: ProductId,
+  state: State,
+  isomorphism = false
+) {
+  const quantity = R.lookup(productId, state)
+
+  return isomorphism ? O.getOrElse(constZero)(quantity) : quantity
 }
 
 export function getCartQuantitySum(state: State) {

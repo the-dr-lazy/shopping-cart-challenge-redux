@@ -162,21 +162,37 @@ describe('Store.Cart.Reducer.reducer', () => {
 //
 
 describe('Store.Cart.Selector.getCartQuantity', () => {
-  it('should return None when there is not any corresponding product in cart', () => {
-    const state = { [Data.Product.b.id]: 1 }
+  describe('isomorphic', () => {
+    it('should return `0` when there is not any corresponding product in the cart', () => {
+      const state = { [Data.Product.b.id]: 1 }
 
-    expect(getCartQuantity(Data.Product.a.id, state)).toBeNone()
+      expect(getCartQuantity(Data.Product.a.id, state, true)).toBe(0)
+    })
+
+    it('should return quantity of the product in the cart when cart contains the product', () => {
+      const state = { [Data.Product.a.id]: 1, [Data.Product.b.id]: 7 }
+
+      expect(getCartQuantity(Data.Product.b.id, state, true)).toBe(7)
+    })
   })
 
-  it('should return Some(number) when cart contains the product', () => {
-    const state = { [Data.Product.a.id]: 1, [Data.Product.b.id]: 7 }
+  describe('non-isomorphic', () => {
+    it('should return `None` when there is not any corresponding product in cart', () => {
+      const state = { [Data.Product.b.id]: 1 }
 
-    expect(getCartQuantity(Data.Product.b.id, state)).toBeSome(7)
+      expect(getCartQuantity(Data.Product.a.id, state)).toBeNone()
+    })
+
+    it('should return `Some(number)` when cart contains the product', () => {
+      const state = { [Data.Product.a.id]: 1, [Data.Product.b.id]: 7 }
+
+      expect(getCartQuantity(Data.Product.b.id, state)).toBeSome(7)
+    })
   })
 })
 
 describe('Store.Cart.Selectors.getCartQuantitySum', () => {
-  it('should return 0 for empty cart', () => {
+  it('should return `0` for empty cart', () => {
     const state = {}
 
     expect(getCartQuantitySum(state)).toBe(0)

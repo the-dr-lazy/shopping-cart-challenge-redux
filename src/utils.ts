@@ -1,4 +1,7 @@
-/*
+import { isSome, Option } from 'fp-ts/lib/Option'
+import { constant } from 'fp-ts/lib/function'
+
+/**
  * A simple conversion from signular to plural for regular nouns!
  */
 export function singularNounToPluralByQuantity(
@@ -7,8 +10,6 @@ export function singularNounToPluralByQuantity(
 ) {
   return quantity >= 2 ? singular + 's' : singular
 }
-
-import { isSome, Option } from 'fp-ts/lib/Option'
 
 /**
  * Extracts from an array of `Option` all the `Some` elements.
@@ -28,3 +29,8 @@ export function somes<TValue>(
 
   return ys
 }
+
+/**
+ * A thunk that returns always `0`
+ */
+export const constZero = constant(0)
