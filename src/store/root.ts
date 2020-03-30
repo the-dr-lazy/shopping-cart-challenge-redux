@@ -45,6 +45,9 @@ export const epic = combineEpics(Products.epic)
 // Selectors
 //
 
+/**
+ * Identity for root state
+ */
 export const getState: (state: State) => State = identity
 
 export function getIsProductsLoading({ products }: State) {

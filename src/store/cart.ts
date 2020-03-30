@@ -15,11 +15,24 @@ export type Quantity = number
 // Action Creators
 //
 
+/**
+ * Resets cart.
+ */
 export const clearCart = createActionCreator('[Cart] clear')
+
+/**
+ * If the product has not been added to the cart, adds it to the cart.
+ * otherwise increments it's quantity.
+ */
 export const addProductToCart = createActionCreator(
   '[Cart] add product',
   (resolve) => (productId: ProductId) => resolve(productId)
 )
+
+/**
+ * Decrements quantity of the product in the cart to 1 and then removes it.
+ * On absolute removing, it'll remove the product from the cart unconditionally.
+ */
 export const removeProductFromCart = createActionCreator(
   '[Cart] remove product',
   (resolve) => (productId: ProductId, absolute = false) =>
@@ -35,7 +48,7 @@ export type State = Record<ProductId, Quantity>
 const initialState: State = {}
 
 export const reducer = createReducer(initialState, (handleAction) => [
-  handleAction(clearCart, constant({})),
+  handleAction(clearCart, constant(initialState)),
 
   handleAction(addProductToCart, (state, { payload }) => ({
     ...state,

@@ -38,10 +38,21 @@ type Action = ActionType<typeof reducer>
 //
 
 export const fetchProducts = {
+  /**
+   * Requests next products fetching
+   */
   next: createActionCreator('[Products] fetch/next'),
+
+  /**
+   * Finishs products fetching with an error
+   */
   error: createActionCreator('[Products] fetch/error', (resolve) => () =>
     resolve(new Error())
   ),
+
+  /**
+   * Completes products fetching
+   */
   complete: createActionCreator(
     '[Products] fetch/complete',
     (resolve) => (items: ReadonlyArray<Product>) => resolve(items)
@@ -58,7 +69,6 @@ export const isLoadingReducer = createReducer(
   isLoadingInitialState,
   (handleAction) => [
     handleAction(fetchProducts.next, constTrue),
-
     handleAction([fetchProducts.error, fetchProducts.complete], constFalse),
   ]
 )
