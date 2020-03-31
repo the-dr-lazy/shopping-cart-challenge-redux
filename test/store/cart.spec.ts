@@ -228,13 +228,33 @@ describe('Store.Cart.Epic.persistCartEpic', () => {
 
   describe('when cart state changes', () => {
     it(
+      'should not try to persist until rehydration completes',
+      observe(() => {
+        const a = { [Data.Product.a.id]: 1 }
+        const state$ = of(a)
+
+        const output$ = persistCartEpic(NEVER, state$, environment)
+
+        function expectation() {
+          expect(environment.storage.setCart).not.toBeCalled()
+        }
+
+        return output$.pipe(finalize(expectation))
+      })
+    )
+
+    it(
       'should not stream out anything',
       mkEpicTest(persistCartEpic, environment, {
         marbles: {
+          action: '  -r-----|',
           state: '   -a-b-c-|',
           expected: '-------|',
         },
         values: {
+          action: {
+            r: rehydrateCart.complete({}),
+          },
           state: {
             a: {},
             b: { [Data.Product.a.id]: 1 },
@@ -248,13 +268,15 @@ describe('Store.Cart.Epic.persistCartEpic', () => {
       'should try to persist cart state into storage',
       observe(() => {
         const a = { [Data.Product.a.id]: 1 }
+        const b = { [Data.Product.a.id]: 2 }
 
-        const state$ = of(a)
+        const action$ = of(rehydrateCart.complete(a))
+        const state$ = of(a, b)
 
-        const output$ = persistCartEpic(NEVER, state$, environment)
+        const output$ = persistCartEpic(action$, state$, environment)
 
         function expectation() {
-          expect(environment.storage.setCart).toBeCalledWith(a)
+          expect(environment.storage.setCart).lastCalledWith(b)
         }
 
         return output$.pipe(finalize(expectation))
@@ -262,16 +284,37 @@ describe('Store.Cart.Epic.persistCartEpic', () => {
     )
 
     it(
-      'should persist just for distinct states',
+      'should not try to persist rehydration state',
+      observe(() => {
+        const a = { [Data.Product.a.id]: 1 }
+        const b = { [Data.Product.a.id]: 1 }
+
+        const action$ = of(rehydrateCart.complete(a))
+        const state$ = of(a, b)
+
+        const output$ = persistCartEpic(action$, state$, environment)
+
+        function expectation() {
+          expect(environment.storage.setCart).toBeCalledTimes(1)
+        }
+
+        return output$.pipe(finalize(expectation))
+      })
+    )
+
+    it(
+      'should persist just distinct states',
       observe(() => {
         const a = { [Data.Product.a.id]: 1 }
         const b = { [Data.Product.a.id]: 2 }
+
+        const action$ = of(rehydrateCart.complete(a))
         const state$ = of(a, a, b, a)
 
-        const output$ = persistCartEpic(NEVER, state$, environment)
+        const output$ = persistCartEpic(action$, state$, environment)
 
         function expectation() {
-          expect(environment.storage.setCart).toBeCalledTimes(3)
+          expect(environment.storage.setCart).toBeCalledTimes(2)
         }
 
         return output$.pipe(finalize(expectation))

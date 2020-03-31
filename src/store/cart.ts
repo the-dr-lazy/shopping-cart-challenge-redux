@@ -12,6 +12,9 @@ import {
   mergeMapTo,
   map,
   catchError,
+  skipUntil,
+  take,
+  skip,
 } from 'rxjs/operators'
 import { createActionCreator, createReducer, ofType, ActionType } from 'deox'
 // import { combineEpics } from 'redux-observable'
@@ -144,12 +147,14 @@ export function getCartQuantitySum(state: State) {
 //
 
 export function persistCartEpic(
-  _action$: Observable<Action>,
+  action$: Observable<Action>,
   state$: Observable<State>,
   { storage }: Environment
 ) {
   return state$.pipe(
+    skipUntil(action$.pipe(ofType(rehydrateCart.complete), take(1))),
     distinctUntilChanged(),
+    skip(1),
     mergeMap((state) => storage.setCart(state))
   )
 }
