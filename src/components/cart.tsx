@@ -83,7 +83,7 @@ export function row({
       <td>
         {incrementQuantityButton}
         {decrementQuantityButton}
-        {removeProductButton}}
+        {removeProductButton}
       </td>
     </tr>
   )
