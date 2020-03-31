@@ -1,5 +1,6 @@
 import { of } from 'rxjs'
 import { delay } from 'rxjs/operators'
+
 import { Product } from '~/store'
 
 const mockProducts: Product[] = [

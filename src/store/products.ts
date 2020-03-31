@@ -1,5 +1,5 @@
 import * as A from 'fp-ts/lib/ReadonlyArray'
-import { constTrue, constFalse } from 'fp-ts/lib/function'
+import { constTrue, constFalse, constant } from 'fp-ts/lib/function'
 import { combineReducers } from 'redux'
 import { Observable, of } from 'rxjs'
 import { mergeMap, map, catchError } from 'rxjs/operators'
@@ -114,7 +114,7 @@ export function fetchProductsEpic(
     mergeMap(() =>
       API.fetchProducts().pipe(
         map(fetchProducts.complete),
-        catchError(() => of(fetchProducts.error()))
+        catchError(constant(of(fetchProducts.error())))
       )
     )
   )

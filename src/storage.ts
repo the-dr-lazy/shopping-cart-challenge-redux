@@ -1,8 +1,8 @@
 import * as O from 'fp-ts/lib/Option'
-import { Decoder } from 'io-ts'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { fromOption } from 'fp-ts-rxjs/lib/Observable'
 import { Observable, defer } from 'rxjs'
+import { Decoder } from 'io-ts'
 
 import * as Store from '~/store'
 import { json } from '~/utils'
