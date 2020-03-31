@@ -1,11 +1,22 @@
 import * as R from 'fp-ts/lib/ReadonlyRecord'
 import * as O from 'fp-ts/lib/Option'
+import * as t from 'io-ts'
 import { Option } from 'fp-ts/lib/Option'
 import { monoidSum } from 'fp-ts/lib/Monoid'
-import { increment, decrement, constant } from 'fp-ts/lib/function'
+import { increment, decrement, constant, flow } from 'fp-ts/lib/function'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { createActionCreator, createReducer } from 'deox'
+import { Observable, of } from 'rxjs'
+import {
+  mergeMap,
+  distinctUntilChanged,
+  mergeMapTo,
+  map,
+  catchError,
+} from 'rxjs/operators'
+import { createActionCreator, createReducer, ofType, ActionType } from 'deox'
+import { combineEpics } from 'redux-observable'
 
+import { Environment } from '~/environment'
 import { constZero } from '~/utils'
 
 import { ProductId } from './products'
@@ -15,6 +26,12 @@ import { ProductId } from './products'
 //
 
 export type Quantity = number
+
+export const StateC = t.record(t.string, t.number)
+
+export type State = t.TypeOf<typeof StateC>
+
+export type Action = ActionType<typeof reducer>
 
 //
 // Action Creators
@@ -44,11 +61,18 @@ export const removeProductFromCart = createActionCreator(
     resolve({ productId, absolute })
 )
 
+export const rehydrateCart = {
+  next: createActionCreator('[Cart] rehydrate/next'),
+  error: createActionCreator('[Cart] rehydrate/error'),
+  complete: createActionCreator(
+    '[Cart] rehydrate/complete',
+    (resolve) => (cart: State) => resolve(cart)
+  ),
+}
+
 //
 // Reducers
 //
-
-export type State = R.ReadonlyRecord<ProductId, Quantity>
 
 const initialState: State = {}
 
@@ -75,6 +99,8 @@ export const reducer = createReducer(initialState, (handleAction) => [
       [productId]: decrement(quantity),
     }
   }),
+
+  handleAction(rehydrateCart.complete, (_, { payload }) => payload),
 ])
 
 function incrementQuantity(productId: ProductId, state: State) {
@@ -112,3 +138,38 @@ export function getCartQuantity(
 export function getCartQuantitySum(state: State) {
   return R.reduce(monoidSum.empty, monoidSum.concat)(state)
 }
+
+//
+// Epics
+//
+
+export function persistCartEpic(
+  _action$: Observable<Action>,
+  state$: Observable<State>,
+  { storage }: Environment
+) {
+  return state$.pipe(
+    distinctUntilChanged(),
+    mergeMap((state) => storage.setCart(state))
+  )
+}
+
+export function rehydrateCartEpic(
+  action$: Observable<Action>,
+  _state$: Observable<State>,
+  { storage }: Environment
+) {
+  return action$.pipe(
+    ofType(rehydrateCart.next),
+    mergeMapTo(
+      storage
+        .getCart()
+        .pipe(
+          map(rehydrateCart.complete),
+          catchError(constant(of(rehydrateCart.error())))
+        )
+    )
+  )
+}
+
+export const epic = combineEpics(persistCartEpic, rehydrateCartEpic)

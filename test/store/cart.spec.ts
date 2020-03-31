@@ -1,3 +1,7 @@
+import { EMPTY, NEVER, of, throwError } from 'rxjs'
+import { finalize } from 'rxjs/operators'
+import { observe } from 'rxjs-marbles/jest'
+
 import {
   addProductToCart,
   removeProductFromCart,
@@ -5,10 +9,13 @@ import {
   reducer,
   getCartQuantity,
   getCartQuantitySum,
+  persistCartEpic,
+  rehydrateCart,
+  rehydrateCartEpic,
 } from '~/store/cart'
 
 import * as Data from '../data'
-import { mkReducerTest } from '../utils'
+import { mkReducerTest, mkEpicTest, mkState, mkEnvironment } from '../utils'
 
 //
 // Reducers
@@ -191,7 +198,7 @@ describe('Store.Cart.Selector.getCartQuantity', () => {
   })
 })
 
-describe('Store.Cart.Selectors.getCartQuantitySum', () => {
+describe('Store.Cart.Selector.getCartQuantitySum', () => {
   it('should return `0` for empty cart', () => {
     const state = {}
 
@@ -205,5 +212,147 @@ describe('Store.Cart.Selectors.getCartQuantitySum', () => {
     }
 
     expect(getCartQuantitySum(state)).toBe(17)
+  })
+})
+
+//
+// Epics
+//
+
+describe('Store.Cart.Epic.persistCartEpic', () => {
+  const environment = mkEnvironment({
+    storage: {
+      setCart: jest.fn().mockReturnValue(EMPTY),
+    },
+  })
+
+  describe('when cart state changes', () => {
+    it(
+      'should not stream out anything',
+      mkEpicTest(persistCartEpic, environment, {
+        marbles: {
+          state: '   -a-b-c-|',
+          expected: '-------|',
+        },
+        values: {
+          state: {
+            a: {},
+            b: { [Data.Product.a.id]: 1 },
+            c: { [Data.Product.a.id]: 2 },
+          },
+        },
+      })
+    )
+
+    it(
+      'should try to persist cart state into storage',
+      observe(() => {
+        const a = { [Data.Product.a.id]: 1 }
+
+        const state$ = of(a)
+
+        const output$ = persistCartEpic(NEVER, state$, environment)
+
+        function expectation() {
+          expect(environment.storage.setCart).toBeCalledWith(a)
+        }
+
+        return output$.pipe(finalize(expectation))
+      })
+    )
+
+    it(
+      'should persist just for distinct states',
+      observe(() => {
+        const a = { [Data.Product.a.id]: 1 }
+        const b = { [Data.Product.a.id]: 2 }
+        const state$ = of(a, a, b, a)
+
+        const output$ = persistCartEpic(NEVER, state$, environment)
+
+        function expectation() {
+          expect(environment.storage.setCart).toBeCalledTimes(3)
+        }
+
+        return output$.pipe(finalize(expectation))
+      })
+    )
+  })
+})
+
+describe('Store.Cart.Epic.rehydrateCartEpic', () => {
+  describe('when rehydrate request comes', () => {
+    const environment = mkEnvironment({
+      storage: {
+        getCart: jest.fn().mockReturnValue(EMPTY),
+      },
+    })
+
+    it(
+      'should try to get cart state from the storage',
+      observe(() => {
+        const action$ = of(rehydrateCart.next())
+
+        const output$ = rehydrateCartEpic(action$, NEVER, environment)
+
+        function expectation() {
+          expect(environment.storage.getCart).toBeCalled()
+        }
+
+        return output$.pipe(finalize(expectation))
+      })
+    )
+  })
+
+  describe('when storage responses with persisted cart state', () => {
+    const environment = mkEnvironment({
+      storage: {
+        getCart: jest.fn().mockReturnValue(of({ [Data.Product.a.id]: 3 })),
+      },
+    })
+
+    it(
+      'should stream out rehydrate complete action',
+      mkEpicTest(rehydrateCartEpic, environment, {
+        marbles: {
+          action: '  -n-|',
+          expected: '-c-|',
+        },
+        values: {
+          action: {
+            n: rehydrateCart.next(),
+          },
+          expected: {
+            c: rehydrateCart.complete({ [Data.Product.a.id]: 3 }),
+          },
+        },
+      })
+    )
+  })
+
+  describe('when storage responses with error', () => {
+    const environment = mkEnvironment({
+      storage: {
+        getCart: jest.fn().mockReturnValue(throwError(new Error('!!!'))),
+      },
+    })
+
+    it(
+      'should stream out rehydrate error action',
+      mkEpicTest(rehydrateCartEpic, environment, {
+        marbles: {
+          action: '  -n-|',
+          expected: '-e-|',
+        },
+        values: {
+          action: {
+            n: rehydrateCart.next(),
+          },
+          expected: {
+            e: rehydrateCart.error(),
+          },
+        },
+      })
+    )
   })
 })

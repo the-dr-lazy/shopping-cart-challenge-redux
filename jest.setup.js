@@ -3,6 +3,10 @@ const O = require('fp-ts/lib/Option')
 
 require('@testing-library/jest-dom')
 
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
 expect.extend({
   toBeNone(received) {
     const options = {

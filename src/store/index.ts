@@ -3,10 +3,17 @@ import { createEpicMiddleware } from 'redux-observable'
 
 import { Environment } from '~/environment'
 
-import { reducer, epic } from './root'
+import * as Cart from './cart'
+import * as Products from './products'
+import { reducer, epic, State, Action } from './root'
 
 export function mkStore(environment: Environment) {
-  const epicMiddleware = createEpicMiddleware({ dependencies: environment })
+  const epicMiddleware = createEpicMiddleware<
+    Action,
+    Action,
+    State,
+    Environment
+  >({ dependencies: environment })
 
   const store = Redux.createStore(
     reducer,
@@ -18,14 +25,18 @@ export function mkStore(environment: Environment) {
   return store
 }
 
-export { fetchProducts, Product, ProductId } from './products'
+export const fetchProducts = Products.fetchProducts.next
+export const rehydrateCart = Cart.rehydrateCart.next
+
+export { Product, ProductId } from './products'
 export {
+  Quantity,
   addProductToCart,
   removeProductFromCart,
   clearCart,
-  Quantity,
 } from './cart'
 export {
+  State,
   getState,
   getIsProductsLoading,
   getProduct,
@@ -36,5 +47,5 @@ export {
   getCartEntity,
   getCartEntities,
   CartEntity,
-  State,
 } from './root'
+export { Cart }

@@ -13,7 +13,7 @@ export type PropsWithHandlers<T, K extends keyof Handlers> = T &
   Pick<Handlers, K>
 
 const handlers = {
-  onFetchProducts: Store.fetchProducts.next,
+  onFetchProducts: Store.fetchProducts,
   onAddProductToCart: Store.addProductToCart,
   onRemoveProductFromCart: Store.removeProductFromCart,
   onClearCart: Store.clearCart,

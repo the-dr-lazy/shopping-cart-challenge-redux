@@ -5,9 +5,12 @@ import { Option } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { identity } from 'fp-ts/lib/function'
 import { combineReducers } from 'redux'
-import { combineEpics } from 'redux-observable'
+import { ActionType } from 'deox'
+import { Observable, merge } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 import { somes } from '~/utils'
+import { Environment } from '~/environment'
 
 import * as Products from './products'
 import * as Cart from './cart'
@@ -24,11 +27,13 @@ export function mkCartEntity(product: Product) {
   return (quantity: Quantity) => ({ ...product, quantity })
 }
 
+export type State = ReturnType<typeof reducer>
+
+export type Action = ActionType<typeof reducer>
+
 //
 // Reducers
 //
-
-export type State = ReturnType<typeof reducer>
 
 export const reducer = combineReducers({
   products: Products.reducer,
@@ -39,7 +44,16 @@ export const reducer = combineReducers({
 // Epics
 //
 
-export const epic = combineEpics(Products.epic)
+export function epic(
+  action$: Observable<Action>,
+  state$: Observable<State>,
+  environment: Environment
+) {
+  return merge(
+    Products.epic(action$, state$, environment),
+    Cart.epic(action$, state$.pipe(map(getCart)), environment)
+  )
+}
 
 //
 // Selectors
@@ -60,6 +74,10 @@ export function getProduct(id: Products.ProductId, { products }: State) {
 
 export function getProducts({ products }: State) {
   return Products.getProducts(products)
+}
+
+export function getCart({ cart }: State) {
+  return cart
 }
 
 export function getCartQuantity(productId: ProductId, { cart }: State) {

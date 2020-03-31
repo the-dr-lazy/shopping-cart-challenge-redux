@@ -5,7 +5,6 @@ import { AnyAction } from 'deox'
 import { Observable } from 'rxjs'
 import { marbles } from 'rxjs-marbles/marbles'
 import { MemoryRouter } from 'react-router-dom'
-import { Some, None } from 'fp-ts/lib/Option'
 
 import { State } from '~/store'
 import { reducer } from '~/store/root'
@@ -42,18 +41,18 @@ type CreateEpicTestSpec<
   TInput extends AnyAction,
   TOutput extends AnyAction,
   TState
-> = {
-  marbles: {
-    state?: string
-    action: string
-    expected: string
+  > = {
+    marbles: {
+      state?: string
+      action?: string
+      expected: string
+    }
+    values?: {
+      state?: { [key: string]: TState }
+      action?: { [key: string]: TInput }
+      expected?: { [key: string]: TOutput }
+    }
   }
-  values: {
-    state?: { [key: string]: TState }
-    action: { [key: string]: TInput }
-    expected: { [key: string]: TOutput }
-  }
-}
 
 export function mkEpicTest<
   TInput extends AnyAction,
@@ -70,9 +69,9 @@ export function mkEpicTest<
   spec: CreateEpicTestSpec<TInput, TOutput, TState>
 ) {
   return marbles((m) => {
-    const state$ = m.hot(spec.marbles.state || '', spec.values.state)
-    const action$ = m.hot(spec.marbles.action, spec.values.action)
-    const expected$ = m.cold(spec.marbles.expected, spec.values.expected)
+    const state$ = m.hot(spec.marbles.state || '', spec.values?.state)
+    const action$ = m.hot(spec.marbles.action || '', spec.values?.action)
+    const expected$ = m.cold(spec.marbles.expected, spec.values?.expected)
 
     const output$ = epic(action$, state$, environment)
 

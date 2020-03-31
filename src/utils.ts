@@ -1,5 +1,10 @@
+import * as O from 'fp-ts/lib/Option'
+import * as E from 'fp-ts/lib/Either'
 import { isSome, Option } from 'fp-ts/lib/Option'
-import { constant } from 'fp-ts/lib/function'
+import { parseJSON, toError } from 'fp-ts/lib/Either'
+import { constant, flow } from 'fp-ts/lib/function'
+import { pipe } from 'fp-ts/lib/pipeable'
+import { Decoder } from 'io-ts'
 
 /**
  * A simple conversion from signular to plural for regular nouns!
@@ -34,3 +39,13 @@ export function somes<TValue>(
  * A thunk that returns always `0`
  */
 export const constZero = constant(0)
+
+/**
+ * Decodes JSON string to a type
+ */
+export function json<A>(decoder: Decoder<unknown, A>) {
+  const decode = flow(decoder.decode, E.mapLeft(toError))
+
+  return (input: string) =>
+    pipe(parseJSON(input, toError), E.chain(decode), O.fromEither)
+}
