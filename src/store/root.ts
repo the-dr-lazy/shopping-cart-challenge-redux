@@ -41,21 +41,6 @@ export const reducer = combineReducers({
 })
 
 //
-// Epics
-//
-
-export function epic(
-  action$: Observable<Action>,
-  state$: Observable<State>,
-  environment: Environment
-) {
-  return merge(
-    Products.epic(action$, state$, environment),
-    Cart.epic(action$, state$.pipe(map(getCart)), environment)
-  )
-}
-
-//
 // Selectors
 //
 
@@ -111,5 +96,24 @@ export function getCartEntities(state: State) {
     R.keys,
     A.map((productId) => getCartEntity(productId, state)),
     somes
+  )
+}
+
+//
+// Epics
+//
+
+export function epic(
+  action$: Observable<Action>,
+  state$: Observable<State>,
+  environment: Environment
+) {
+  return merge(
+    Products.epic(
+      action$,
+      state$.pipe(map(({ products }) => products)),
+      environment
+    ),
+    Cart.epic(action$, state$.pipe(map(getCart)), environment)
   )
 }

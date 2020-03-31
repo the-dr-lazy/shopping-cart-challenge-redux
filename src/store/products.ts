@@ -106,7 +106,7 @@ export function getProduct(id: ProductId, { items }: State) {
 
 export function fetchProductsEpic(
   action$: Observable<Action>,
-  _state$: any,
+  _state$: Observable<State>,
   { API }: Environment
 ) {
   return action$.pipe(
