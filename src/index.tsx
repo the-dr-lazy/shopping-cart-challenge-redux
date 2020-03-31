@@ -14,7 +14,7 @@ function main() {
   const store = mkStore(defaultEnvironment)
   const handlers = mkHandlers(store)
 
-  store.dispatch(Store.rehydrateCart())
+  Store.rehydrate(store)
 
   ReactDOM.render(
     <Provider store={store}>

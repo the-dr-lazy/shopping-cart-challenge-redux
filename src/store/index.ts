@@ -25,8 +25,11 @@ export function mkStore(environment: Environment) {
   return store
 }
 
+export function rehydrate(store: Redux.Store) {
+  store.dispatch(Cart.rehydrateCart.next())
+}
+
 export const fetchProducts = Products.fetchProducts.next
-export const rehydrateCart = Cart.rehydrateCart.next
 
 export { Product, ProductId } from './products'
 export {
