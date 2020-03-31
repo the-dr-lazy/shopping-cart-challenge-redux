@@ -2,8 +2,7 @@ import * as O from 'fp-ts/lib/Option'
 import { Decoder } from 'io-ts'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { fromOption } from 'fp-ts-rxjs/lib/Observable'
-import { Observable, defer, EMPTY } from 'rxjs'
-import { tap } from 'rxjs/operators'
+import { Observable, defer } from 'rxjs'
 
 import * as Store from '~/store'
 import { json } from '~/utils'
@@ -32,5 +31,5 @@ export function setCart(cart: Store.Cart.State) {
 }
 
 export function getCart() {
-  return get(keys.cart, Store.Cart.StateC).pipe(tap(console.log))
+  return get(keys.cart, Store.Cart.StateC)
 }
