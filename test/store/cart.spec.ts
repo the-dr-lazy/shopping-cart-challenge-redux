@@ -307,7 +307,7 @@ describe('Store.Cart.Epic.rehydrateCartEpic', () => {
   describe('when storage responses with persisted cart state', () => {
     const environment = mkEnvironment({
       storage: {
-        getCart: jest.fn().mockReturnValue(of({ [Data.Product.a.id]: 3 })),
+        getCart: () => of({ [Data.Product.a.id]: 3 }),
       },
     })
 
@@ -333,7 +333,7 @@ describe('Store.Cart.Epic.rehydrateCartEpic', () => {
   describe('when storage responses with error', () => {
     const environment = mkEnvironment({
       storage: {
-        getCart: jest.fn().mockReturnValue(throwError(new Error('!!!'))),
+        getCart: () => throwError(new Error('!!!')),
       },
     })
 

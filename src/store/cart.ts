@@ -3,7 +3,7 @@ import * as O from 'fp-ts/lib/Option'
 import * as t from 'io-ts'
 import { Option } from 'fp-ts/lib/Option'
 import { monoidSum } from 'fp-ts/lib/Monoid'
-import { increment, decrement, constant, flow } from 'fp-ts/lib/function'
+import { increment, decrement, constant } from 'fp-ts/lib/function'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { Observable, of } from 'rxjs'
 import {
@@ -14,10 +14,10 @@ import {
   catchError,
 } from 'rxjs/operators'
 import { createActionCreator, createReducer, ofType, ActionType } from 'deox'
-import { combineEpics } from 'redux-observable'
+// import { combineEpics } from 'redux-observable'
 
 import { Environment } from '~/environment'
-import { constZero } from '~/utils'
+import { constZero, combineEpics } from '~/utils'
 
 import { ProductId } from './products'
 

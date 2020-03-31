@@ -35,4 +35,6 @@ const mockProducts: Product[] = [
   },
 ]
 
-export const fetchProducts = of(mockProducts).pipe(delay(100))
+export function fetchProducts() {
+  return of(mockProducts).pipe(delay(100))
+}

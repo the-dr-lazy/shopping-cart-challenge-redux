@@ -5,6 +5,9 @@ import { parseJSON, toError } from 'fp-ts/lib/Either'
 import { constant, flow } from 'fp-ts/lib/function'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { Decoder } from 'io-ts'
+import { Observable } from 'rxjs'
+import { AnyAction } from 'deox'
+import { combineEpics as combineEs } from 'redux-observable'
 
 /**
  * A simple conversion from signular to plural for regular nouns!
@@ -48,4 +51,35 @@ export function json<A>(decoder: Decoder<unknown, A>) {
 
   return (input: string) =>
     pipe(parseJSON(input, toError), E.chain(decode), O.fromEither)
+}
+
+/**
+ * Type adjusted epic!
+ */
+export type Epic<
+  TInput extends AnyAction,
+  TOutput extends AnyAction,
+  TState,
+  TEnvironment
+  > = (
+    action$: Observable<TInput>,
+    state$: Observable<TState>,
+    environment: TEnvironment
+  ) => Observable<TOutput>
+
+/**
+ * Identical as redux-observable's combineEpics with replaced Epic type.
+ */
+export function combineEpics<
+  TInput extends AnyAction,
+  TOutput extends AnyAction,
+  TState,
+  TEnvironment
+>(
+  ...epics: Epic<TInput, TOutput, TState, TEnvironment>[]
+): Epic<TInput, TOutput, TState, TEnvironment>
+export function combineEpics(
+  ...args: Epic<AnyAction, AnyAction, unknown, unknown>[]
+) {
+  return combineEs(...args)
 }

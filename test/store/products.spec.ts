@@ -1,4 +1,6 @@
-import { of, throwError } from 'rxjs'
+import { of, throwError, EMPTY, NEVER } from 'rxjs'
+import { finalize } from 'rxjs/operators'
+import { observe } from 'rxjs-marbles/jest'
 
 import {
   fetchProducts,
@@ -137,10 +139,33 @@ describe('Store.Products.Selector.getProducts', () => {
 //
 
 describe('Store.Products.Epic.fetchProductsEpic', () => {
+  describe('when fetch products request comes', () => {
+    const environment = mkEnvironment({
+      API: {
+        fetchProducts: jest.fn().mockReturnValue(EMPTY),
+      },
+    })
+
+    it(
+      'should try to fetch products from API',
+      observe(() => {
+        const action$ = of(fetchProducts.next())
+
+        const output$ = fetchProductsEpic(action$, NEVER, environment)
+
+        function expectation() {
+          expect(environment.API.fetchProducts).toBeCalled()
+        }
+
+        return output$.pipe(finalize(expectation))
+      })
+    )
+  })
+
   describe('when API responses with products', () => {
     const environment = mkEnvironment({
       API: {
-        fetchProducts: of([Data.Product.a]),
+        fetchProducts: () => of([Data.Product.a]),
       },
     })
 
@@ -148,8 +173,8 @@ describe('Store.Products.Epic.fetchProductsEpic', () => {
       'should output fetch complete',
       mkEpicTest(fetchProductsEpic, environment, {
         marbles: {
-          action: '  -n-',
-          expected: '-c-',
+          action: '  -n-|',
+          expected: '-c-|',
         },
         values: {
           action: {
@@ -166,7 +191,7 @@ describe('Store.Products.Epic.fetchProductsEpic', () => {
   describe('when API responses with error', () => {
     const environment = mkEnvironment({
       API: {
-        fetchProducts: throwError('!'),
+        fetchProducts: () => throwError('!'),
       },
     })
 
@@ -174,8 +199,8 @@ describe('Store.Products.Epic.fetchProductsEpic', () => {
       'should output fetch error',
       mkEpicTest(fetchProductsEpic, environment, {
         marbles: {
-          action: '  -n-',
-          expected: '-e-',
+          action: '  -n-|',
+          expected: '-e-|',
         },
         values: {
           action: {

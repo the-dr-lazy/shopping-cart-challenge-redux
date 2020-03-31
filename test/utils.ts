@@ -10,6 +10,7 @@ import { State } from '~/store'
 import { reducer } from '~/store/root'
 import { Environment } from '~/environment'
 import { Handlers } from '~/handlers'
+import { Epic } from '~/utils'
 
 declare global {
   namespace jest {
@@ -60,11 +61,7 @@ export function mkEpicTest<
   TState,
   TEnvironment
 >(
-  epic: (
-    action$: Observable<TInput>,
-    state$: Observable<TState>,
-    environment: TEnvironment
-  ) => Observable<TOutput>,
+  epic: Epic<TInput, TOutput, TState, TEnvironment>,
   environment: TEnvironment,
   spec: CreateEpicTestSpec<TInput, TOutput, TState>
 ) {

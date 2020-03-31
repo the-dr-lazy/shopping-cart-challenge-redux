@@ -112,7 +112,7 @@ export function fetchProductsEpic(
   return action$.pipe(
     ofType(fetchProducts.next),
     mergeMap(() =>
-      API.fetchProducts.pipe(
+      API.fetchProducts().pipe(
         map(fetchProducts.complete),
         catchError(() => of(fetchProducts.error()))
       )
