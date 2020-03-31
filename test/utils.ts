@@ -42,18 +42,18 @@ type CreateEpicTestSpec<
   TInput extends AnyAction,
   TOutput extends AnyAction,
   TState
-  > = {
-    marbles: {
-      state?: string
-      action?: string
-      expected: string
-    }
-    values?: {
-      state?: { [key: string]: TState }
-      action?: { [key: string]: TInput }
-      expected?: { [key: string]: TOutput }
-    }
+> = {
+  marbles: {
+    state?: string
+    action?: string
+    expected: string
   }
+  values?: {
+    state?: { [key: string]: TState }
+    action?: { [key: string]: TInput }
+    expected?: { [key: string]: TOutput }
+  }
+}
 
 export function mkEpicTest<
   TInput extends AnyAction,
@@ -80,7 +80,7 @@ type DeepPartial<T> = T extends object
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : T
 
-export function mkEnvironment(
+export function mkTestEnvironment(
   environment: DeepPartial<Environment>
 ): Environment {
   return <any>environment
@@ -98,10 +98,10 @@ export function render(
   })
 }
 
-export function mkHandlers(handlers: Partial<Handlers> = {}) {
+export function mkTestHandlers(handlers: Partial<Handlers> = {}) {
   return <any>handlers
 }
 
-export function mkState(state: DeepPartial<State> = {}): State {
+export function mkTestState(state: DeepPartial<State> = {}): State {
   return <any>merge(reducer(undefined, { type: '@@INIT' }), state)
 }

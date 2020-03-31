@@ -15,7 +15,12 @@ import {
 } from '~/store/cart'
 
 import * as Data from '../data'
-import { mkReducerTest, mkEpicTest, mkState, mkEnvironment } from '../utils'
+import {
+  mkReducerTest,
+  mkEpicTest,
+  mkTestState,
+  mkTestEnvironment,
+} from '../utils'
 
 //
 // Reducers
@@ -220,7 +225,7 @@ describe('Store.Cart.Selector.getCartQuantitySum', () => {
 //
 
 describe('Store.Cart.Epic.persistCartEpic', () => {
-  const environment = mkEnvironment({
+  const environment = mkTestEnvironment({
     storage: {
       setCart: jest.fn().mockReturnValue(EMPTY),
     },
@@ -325,7 +330,7 @@ describe('Store.Cart.Epic.persistCartEpic', () => {
 
 describe('Store.Cart.Epic.rehydrateCartEpic', () => {
   describe('when rehydrate request comes', () => {
-    const environment = mkEnvironment({
+    const environment = mkTestEnvironment({
       storage: {
         getCart: jest.fn().mockReturnValue(EMPTY),
       },
@@ -348,7 +353,7 @@ describe('Store.Cart.Epic.rehydrateCartEpic', () => {
   })
 
   describe('when storage responses with persisted cart state', () => {
-    const environment = mkEnvironment({
+    const environment = mkTestEnvironment({
       storage: {
         getCart: () => of({ [Data.Product.a.id]: 3 }),
       },
@@ -374,7 +379,7 @@ describe('Store.Cart.Epic.rehydrateCartEpic', () => {
   })
 
   describe('when storage responses with error', () => {
-    const environment = mkEnvironment({
+    const environment = mkTestEnvironment({
       storage: {
         getCart: () => throwError(new Error('!!!')),
       },

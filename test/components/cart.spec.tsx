@@ -5,7 +5,7 @@ import * as Cart from '~/components/cart'
 import * as Store from '~/store'
 
 import * as Data from '../data'
-import { render, mkHandlers } from '../utils'
+import { render, mkTestHandlers } from '../utils'
 import { mkCartEntity } from '~/store/root'
 
 describe('Component.Cart.mini', () => {
@@ -36,7 +36,7 @@ describe('Component.Cart.mini', () => {
 
 describe('Component.Cart.row', () => {
   it('should render product name', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { queryByText } = render(
       <Cart.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
@@ -49,7 +49,7 @@ describe('Component.Cart.row', () => {
   })
 
   it('should render product quantity', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { queryByText } = render(
       <Cart.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
@@ -60,7 +60,7 @@ describe('Component.Cart.row', () => {
   })
 
   it('should render product price', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { queryByText } = render(
       <Cart.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
@@ -73,7 +73,7 @@ describe('Component.Cart.row', () => {
   })
 
   it('should render total price', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { queryByText } = render(
       <Cart.row entity={mkCartEntity(Data.Product.b)(5)} {...handlers} />,
@@ -89,7 +89,7 @@ describe('Component.Cart.row', () => {
 
   describe('when quantity is one', () => {
     it('should disable decrease quantity button', () => {
-      const handlers = mkHandlers({})
+      const handlers = mkTestHandlers({})
 
       const { queryByLabelText } = render(
         <Cart.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
@@ -102,7 +102,7 @@ describe('Component.Cart.row', () => {
 
   describe('when click on increment quantity button', () => {
     it('should call onAddProductToCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onAddProductToCart: jest.fn(),
       })
 
@@ -117,7 +117,7 @@ describe('Component.Cart.row', () => {
     })
 
     it('should apply correct product ID to onAddProductToCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onAddProductToCart: jest.fn(),
       })
 
@@ -134,7 +134,7 @@ describe('Component.Cart.row', () => {
 
   describe('when click on decrement quantity button', () => {
     it('should call onRemoveProductFromCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onRemoveProductFromCart: jest.fn(),
       })
 
@@ -149,7 +149,7 @@ describe('Component.Cart.row', () => {
     })
 
     it('should apply correct product ID to onRemoveProductFromCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onRemoveProductFromCart: jest.fn(),
       })
 
@@ -166,7 +166,7 @@ describe('Component.Cart.row', () => {
 
   describe('when click on remove from the cart button', () => {
     it('should call onRemoveProductFromCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onRemoveProductFromCart: jest.fn(),
       })
 
@@ -181,7 +181,7 @@ describe('Component.Cart.row', () => {
     })
 
     it('should apply correct product ID to onRemoveProductFromCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onRemoveProductFromCart: jest.fn(),
       })
 

@@ -13,7 +13,7 @@ import {
 } from '~/store/products'
 
 import * as Data from '../data'
-import { mkReducerTest, mkEpicTest, mkEnvironment } from '../utils'
+import { mkReducerTest, mkEpicTest, mkTestEnvironment } from '../utils'
 
 //
 // Reducers
@@ -140,7 +140,7 @@ describe('Store.Products.Selector.getProducts', () => {
 
 describe('Store.Products.Epic.fetchProductsEpic', () => {
   describe('when fetch products request comes', () => {
-    const environment = mkEnvironment({
+    const environment = mkTestEnvironment({
       API: {
         fetchProducts: jest.fn().mockReturnValue(EMPTY),
       },
@@ -163,7 +163,7 @@ describe('Store.Products.Epic.fetchProductsEpic', () => {
   })
 
   describe('when API responses with products', () => {
-    const environment = mkEnvironment({
+    const environment = mkTestEnvironment({
       API: {
         fetchProducts: () => of([Data.Product.a]),
       },
@@ -189,7 +189,7 @@ describe('Store.Products.Epic.fetchProductsEpic', () => {
   })
 
   describe('when API responses with error', () => {
-    const environment = mkEnvironment({
+    const environment = mkTestEnvironment({
       API: {
         fetchProducts: () => throwError('!'),
       },

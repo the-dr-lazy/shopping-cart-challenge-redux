@@ -6,7 +6,7 @@ import {
 } from '~/store/root'
 
 import * as Data from '../data'
-import { mkState } from '../utils'
+import { mkTestState } from '../utils'
 
 //
 // Data Types
@@ -35,7 +35,7 @@ describe('Store.Root.Data', () => {
 
 describe('Store.Root.Selector.getCartTotalPrice', () => {
   it('should return zero for empty cart', () => {
-    const state = mkState({
+    const state = mkTestState({
       cart: {},
       products: { items: [Data.Product.a] },
     })
@@ -44,7 +44,7 @@ describe('Store.Root.Selector.getCartTotalPrice', () => {
   })
 
   it('should calculate total price of non-empty cart', () => {
-    const state = mkState({
+    const state = mkTestState({
       cart: { [Data.Product.a.id]: 2, [Data.Product.b.id]: 5 },
       products: {
         items: [Data.Product.a, Data.Product.b],
@@ -58,7 +58,7 @@ describe('Store.Root.Selector.getCartTotalPrice', () => {
 
 describe('Store.Root.Selector.getCartEntity', () => {
   it('should return None when there is not any corresponding product in the cart', () => {
-    const state = mkState({
+    const state = mkTestState({
       cart: {},
       products: { items: [Data.Product.a] },
     })
@@ -67,7 +67,7 @@ describe('Store.Root.Selector.getCartEntity', () => {
   })
 
   it('should return Some(CartEntity) when the product exists in the cart', () => {
-    const state = mkState({
+    const state = mkTestState({
       cart: { [Data.Product.a.id]: 3 },
       products: { items: [Data.Product.a, Data.Product.b] },
     })
@@ -79,7 +79,7 @@ describe('Store.Root.Selector.getCartEntity', () => {
 
 describe('Store.Root.Selectors.getCartEntities', () => {
   it('should return empty array for empty cart', () => {
-    const state = mkState({
+    const state = mkTestState({
       cart: {},
       products: { items: [Data.Product.a] },
     })
@@ -88,7 +88,7 @@ describe('Store.Root.Selectors.getCartEntities', () => {
   })
 
   it('should return cart entities for non-empty cart', () => {
-    const state = mkState({
+    const state = mkTestState({
       cart: {
         [Data.Product.a.id]: 2,
         [Data.Product.b.id]: 5,

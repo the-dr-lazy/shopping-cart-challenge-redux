@@ -4,11 +4,11 @@ import { fireEvent } from '@testing-library/react'
 import * as Product from '~/components/product'
 
 import * as Data from '../data'
-import { render, mkHandlers } from '../utils'
+import { render, mkTestHandlers } from '../utils'
 
 describe('Component.Product.component', () => {
   it('should render product image', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { container } = render(
       <Product.component product={Data.Product.a} {...handlers} />
@@ -18,7 +18,7 @@ describe('Component.Product.component', () => {
   })
 
   it('should render product image src', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { container } = render(
       <Product.component product={Data.Product.a} {...handlers} />
@@ -31,7 +31,7 @@ describe('Component.Product.component', () => {
   })
 
   it('should render product image alt', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { container } = render(
       <Product.component product={Data.Product.a} {...handlers} />
@@ -44,7 +44,7 @@ describe('Component.Product.component', () => {
   })
 
   it('should render product name', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { queryByText } = render(
       <Product.component product={Data.Product.a} {...handlers} />
@@ -54,7 +54,7 @@ describe('Component.Product.component', () => {
   })
 
   it('should render price', () => {
-    const handlers = mkHandlers()
+    const handlers = mkTestHandlers()
 
     const { queryByText } = render(
       <Product.component product={Data.Product.a} {...handlers} />
@@ -67,7 +67,7 @@ describe('Component.Product.component', () => {
 
   describe('when click on add to cart button', () => {
     it('should call onAddProductToCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onAddProductToCart: jest.fn(),
       })
 
@@ -81,7 +81,7 @@ describe('Component.Product.component', () => {
     })
 
     it('should apply correct product ID to onAddProductToCart callback', () => {
-      const handlers = mkHandlers({
+      const handlers = mkTestHandlers({
         onAddProductToCart: jest.fn(),
       })
 
