@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import * as Store from '~/store'
 import { PropsWithHandlers } from '~/handlers'
-import { singularNounToPluralByQuantity } from '~/utils'
+import { singularNounToPluralByQuantity, defineDisplayName } from '~/utils'
 
 type MiniProps = {
   cartQuantitySum: number
@@ -88,3 +88,5 @@ export function row({
     </tr>
   )
 }
+
+defineDisplayName('Component.Cart', { mini, row })

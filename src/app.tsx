@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import * as Store from '~/store'
 import { Home, Cart } from '~/pages'
 import { Handlers } from '~/handlers'
+import { defineDisplayName } from '~/utils'
 
 type Props = {
   handlers: Handlers
@@ -32,3 +33,5 @@ export function component({ handlers }: Props) {
     </BrowserRouter>
   )
 }
+
+defineDisplayName('App', { component })

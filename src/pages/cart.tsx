@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import * as Store from '~/store'
 import { PropsWithHandlers } from '~/handlers'
 import { Cart } from '~/components'
+import { defineDisplayName } from '~/utils'
 
 type Props = PropsWithHandlers<
   { state: Store.State },
@@ -67,3 +68,5 @@ const loading = (
     <p>Loading...</p>
   </div>
 )
+
+defineDisplayName('Page.Cart', { component })

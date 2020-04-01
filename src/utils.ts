@@ -61,11 +61,11 @@ export type Epic<
   TOutput extends AnyAction,
   TState,
   TEnvironment
-> = (
-  action$: Observable<TInput>,
-  state$: Observable<TState>,
-  environment: TEnvironment
-) => Observable<TOutput>
+  > = (
+    action$: Observable<TInput>,
+    state$: Observable<TState>,
+    environment: TEnvironment
+  ) => Observable<TOutput>
 
 /**
  * Identical as redux-observable's combineEpics with replaced Epic type.
@@ -82,4 +82,18 @@ export function combineEpics(
   ...args: Epic<AnyAction, AnyAction, unknown, unknown>[]
 ) {
   return combineEs(...args)
+}
+
+/**
+ * Define module base display name for components.
+ */
+export function defineDisplayName(
+  moduleName: string,
+  componentMap: { [name: string]: Function }
+) {
+  Object.entries(componentMap).forEach(([name, component]) => {
+    Object.defineProperty(component, 'displayName', {
+      value: `${moduleName}.${name}`,
+    })
+  })
 }

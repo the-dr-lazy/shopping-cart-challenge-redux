@@ -2,6 +2,7 @@ import React from 'react'
 
 import * as Store from '~/store'
 import { PropsWithHandlers } from '~/handlers'
+import { defineDisplayName } from '~/utils'
 
 type Props = PropsWithHandlers<{ product: Store.Product }, 'onAddProductToCart'>
 
@@ -27,3 +28,5 @@ export function component({ product, onAddProductToCart }: Props) {
     </div>
   )
 }
+
+defineDisplayName('Component.Product', { component })
