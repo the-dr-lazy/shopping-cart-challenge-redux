@@ -1,5 +1,6 @@
 import * as Redux from 'redux'
 import { createEpicMiddleware } from 'redux-observable'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
 import { Environment } from '~/environment'
 
@@ -17,7 +18,7 @@ export function mkStore(environment: Environment) {
 
   const store = Redux.createStore(
     reducer,
-    Redux.applyMiddleware(epicMiddleware)
+    composeWithDevTools(Redux.applyMiddleware(epicMiddleware))
   )
 
   epicMiddleware.run(epic)

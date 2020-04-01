@@ -27,7 +27,6 @@
   "dependencies": {
     "deox": "^3.2.1",
     "fp-ts": "^2.5.3",
-    "fp-ts-rxjs": "^0.6.9",
     "io-ts": "^2.1.2",
     "re-reselect": "^3.4.0",
     "react": "^16.12.0",
@@ -56,6 +55,7 @@
     "jest": "^25.2.3",
     "jest-diff": "^25.2.3",
     "prettier": "^2.0.2",
+    "redux-devtools-extension": "^2.13.8",
     "rxjs-marbles": "^6.0.0",
     "source-map-loader": "^0.2.4",
     "ts-jest": "^25.2.1",

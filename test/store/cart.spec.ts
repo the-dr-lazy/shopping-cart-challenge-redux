@@ -1,3 +1,4 @@
+import { some, none } from 'fp-ts/lib/Option'
 import { EMPTY, NEVER, of, throwError } from 'rxjs'
 import { finalize } from 'rxjs/operators'
 import { observe } from 'rxjs-marbles/jest'
@@ -15,12 +16,7 @@ import {
 } from '~/store/cart'
 
 import * as Data from '../data'
-import {
-  mkReducerTest,
-  mkEpicTest,
-  mkTestState,
-  mkTestEnvironment,
-} from '../utils'
+import { mkReducerTest, mkEpicTest, mkTestEnvironment } from '../utils'
 
 //
 // Reducers
@@ -352,10 +348,10 @@ describe('Store.Cart.Epic.rehydrateCartEpic', () => {
     )
   })
 
-  describe('when storage responses with persisted cart state', () => {
+  describe('when storage responses with `Some`', () => {
     const environment = mkTestEnvironment({
       storage: {
-        getCart: () => of({ [Data.Product.a.id]: 3 }),
+        getCart: () => of(some({ [Data.Product.a.id]: 3 })),
       },
     })
 
@@ -378,26 +374,26 @@ describe('Store.Cart.Epic.rehydrateCartEpic', () => {
     )
   })
 
-  describe('when storage responses with error', () => {
+  describe('when storage responses with `None`', () => {
     const environment = mkTestEnvironment({
       storage: {
-        getCart: () => throwError(new Error('!!!')),
+        getCart: () => of(none),
       },
     })
 
     it(
-      'should stream out rehydrate error action',
+      'should stream out rehydrate complete action',
       mkEpicTest(rehydrateCartEpic, environment, {
         marbles: {
           action: '  -n-|',
-          expected: '-e-|',
+          expected: '-c-|',
         },
         values: {
           action: {
             n: rehydrateCart.next(),
           },
           expected: {
-            e: rehydrateCart.error(),
+            c: rehydrateCart.complete({}),
           },
         },
       })

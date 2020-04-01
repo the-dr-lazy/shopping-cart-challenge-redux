@@ -6,7 +6,13 @@ import { monoidSum } from 'fp-ts/lib/Monoid'
 import { pipe } from 'fp-ts/lib/pipeable'
 import { Observable, of } from 'rxjs'
 import { createSelector } from 'reselect'
-import { increment, decrement, constant, identity } from 'fp-ts/lib/function'
+import {
+  increment,
+  decrement,
+  constant,
+  identity,
+  flow,
+} from 'fp-ts/lib/function'
 import { createActionCreator, createReducer, ofType, ActionType } from 'deox'
 import {
   mergeMap,
@@ -66,7 +72,6 @@ export const removeProductFromCart = createActionCreator(
 
 export const rehydrateCart = {
   next: createActionCreator('[Cart] rehydrate/next'),
-  error: createActionCreator('[Cart] rehydrate/error'),
   complete: createActionCreator(
     '[Cart] rehydrate/complete',
     (resolve) => (cart: State) => resolve(cart)
@@ -171,8 +176,7 @@ export function rehydrateCartEpic(
       storage
         .getCart()
         .pipe(
-          map(rehydrateCart.complete),
-          catchError(constant(of(rehydrateCart.error())))
+          map(flow(O.getOrElse(constant(initialState)), rehydrateCart.complete))
         )
     )
   )
