@@ -1,17 +1,18 @@
 import React from 'react'
 import { fireEvent } from '@testing-library/react'
 
-import * as Product from '~/components/product'
+import * as Store from '~/store'
+import * as List from '~/components/product/list'
 
-import * as Data from '../data'
-import { render, mkTestHandlers } from '../utils'
+import * as Data from '../../data'
+import { render, mkTestHandlers } from '../../utils'
 
-describe('Component.Product.component', () => {
+describe('Component.Product.List.item', () => {
   it('should render product image', () => {
     const handlers = mkTestHandlers()
 
     const { container } = render(
-      <Product.component product={Data.Product.a} {...handlers} />
+      <List.item product={Data.Product.a} {...handlers} />
     )
 
     expect(container.querySelector('img')).not.toBeNull()
@@ -21,7 +22,7 @@ describe('Component.Product.component', () => {
     const handlers = mkTestHandlers()
 
     const { container } = render(
-      <Product.component product={Data.Product.a} {...handlers} />
+      <List.item product={Data.Product.a} {...handlers} />
     )
 
     expect(container.querySelector('img')).toHaveAttribute(
@@ -34,7 +35,7 @@ describe('Component.Product.component', () => {
     const handlers = mkTestHandlers()
 
     const { container } = render(
-      <Product.component product={Data.Product.a} {...handlers} />
+      <List.item product={Data.Product.a} {...handlers} />
     )
 
     expect(container.querySelector('img')).toHaveAttribute(
@@ -47,7 +48,7 @@ describe('Component.Product.component', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Product.component product={Data.Product.a} {...handlers} />
+      <List.item product={Data.Product.a} {...handlers} />
     )
 
     expect(queryByText(Data.Product.a.name)).not.toBeNull()
@@ -57,7 +58,7 @@ describe('Component.Product.component', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Product.component product={Data.Product.a} {...handlers} />
+      <List.item product={Data.Product.a} {...handlers} />
     )
 
     expect(
@@ -72,7 +73,7 @@ describe('Component.Product.component', () => {
       })
 
       const { getByLabelText } = render(
-        <Product.component product={Data.Product.a} {...handlers} />
+        <List.item product={Data.Product.a} {...handlers} />
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
@@ -86,12 +87,40 @@ describe('Component.Product.component', () => {
       })
 
       const { getByLabelText } = render(
-        <Product.component product={Data.Product.a} {...handlers} />
+        <List.item product={Data.Product.a} {...handlers} />
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
       expect(handlers.onAddProductToCart).toBeCalledWith(Data.Product.a.id)
+    })
+  })
+})
+
+describe('Component.Product.List.component', () => {
+  const handlers = mkTestHandlers()
+
+  describe('when there is not any product', () => {
+    const products: ReadonlyArray<Store.Product> = []
+
+    it('should not render any product', () => {
+      const { container } = render(
+        <List.component products={products} {...handlers} />
+      )
+
+      expect(container.querySelector('ul')?.childNodes.length).toBe(0)
+    })
+  })
+
+  describe('when ', () => {
+    const products = [Data.Product.a, Data.Product.b]
+
+    it('should render products', () => {
+      const { container } = render(
+        <List.component products={products} {...handlers} />
+      )
+
+      expect(container.querySelector('ul')?.childNodes.length).toBe(2)
     })
   })
 })

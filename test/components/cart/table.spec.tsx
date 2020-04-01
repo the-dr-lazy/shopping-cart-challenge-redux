@@ -1,45 +1,19 @@
 import React from 'react'
 import { fireEvent } from '@testing-library/react'
 
-import * as Cart from '~/components/cart'
 import * as Store from '~/store'
-
-import * as Data from '../data'
-import { render, mkTestHandlers } from '../utils'
+import * as Table from '~/components/cart/table'
 import { mkCartEntity } from '~/store/root'
 
-describe('Component.Cart.mini', () => {
-  describe('when the sum of the cart quantity is zero', () => {
-    const { container } = render(<Cart.mini cartQuantitySum={0} />)
+import * as Data from '../../data'
+import { render, mkTestHandlers } from '../../utils'
 
-    it('should render empty message', () => {
-      expect(container.firstChild).toHaveTextContent(/cart is empty/i)
-    })
-  })
-
-  describe('when the sum of the cart quantity is one', () => {
-    it('should render sum of the cart quantity', () => {
-      const { container } = render(<Cart.mini cartQuantitySum={1} />)
-
-      expect(container.firstChild).toHaveTextContent(/1/)
-    })
-  })
-
-  describe('when the sum of the cart quantity is greater than one', () => {
-    it('should render sum of the cart quantity', () => {
-      const { container } = render(<Cart.mini cartQuantitySum={11} />)
-
-      expect(container.firstChild).toHaveTextContent(/11/)
-    })
-  })
-})
-
-describe('Component.Cart.row', () => {
+describe('Component.Cart.Table.row', () => {
   it('should render product name', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Cart.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
+      <Table.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
       'tbody'
     )
 
@@ -52,7 +26,7 @@ describe('Component.Cart.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Cart.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
+      <Table.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
       'tbody'
     )
 
@@ -63,7 +37,7 @@ describe('Component.Cart.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Cart.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
+      <Table.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
       'tbody'
     )
 
@@ -76,7 +50,7 @@ describe('Component.Cart.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Cart.row entity={mkCartEntity(Data.Product.b)(5)} {...handlers} />,
+      <Table.row entity={mkCartEntity(Data.Product.b)(5)} {...handlers} />,
       'tbody'
     )
 
@@ -92,7 +66,7 @@ describe('Component.Cart.row', () => {
       const handlers = mkTestHandlers({})
 
       const { queryByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -107,7 +81,7 @@ describe('Component.Cart.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -122,7 +96,7 @@ describe('Component.Cart.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.b)(1)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.b)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -139,7 +113,7 @@ describe('Component.Cart.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
         'tbody'
       )
 
@@ -154,7 +128,7 @@ describe('Component.Cart.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.b)(2)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.b)(2)} {...handlers} />,
         'tbody'
       )
 
@@ -171,7 +145,7 @@ describe('Component.Cart.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -186,7 +160,7 @@ describe('Component.Cart.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Cart.row entity={mkCartEntity(Data.Product.b)(1)} {...handlers} />,
+        <Table.row entity={mkCartEntity(Data.Product.b)(1)} {...handlers} />,
         'tbody'
       )
 
@@ -196,6 +170,40 @@ describe('Component.Cart.row', () => {
         Data.Product.b.id,
         true
       )
+    })
+  })
+})
+
+describe('Component.Cart.Table.body', () => {
+  const handlers = mkTestHandlers()
+
+  describe('when cart is empty', () => {
+    it('should not render any product', () => {
+      const entities: ReadonlyArray<Store.CartEntity> = []
+
+      const { container } = render(
+        <Table.body entities={entities} {...handlers} />,
+        'table'
+      )
+
+      const tbody = container.querySelector('tbody')!
+
+      expect(tbody.childNodes.length).toBe(0)
+    })
+  })
+
+  describe('when cart has product(s)', () => {
+    it('should render products', () => {
+      const entities = [mkCartEntity(Data.Product.a)(2)]
+
+      const { container } = render(
+        <Table.body entities={entities} {...handlers} />,
+        'table'
+      )
+
+      const tbody = container.querySelector('tbody')!
+
+      expect(tbody.childNodes.length).toBe(1)
     })
   })
 })

@@ -11,27 +11,14 @@ type Props = PropsWithHandlers<
   'onAddProductToCart' | 'onRemoveProductFromCart' | 'onClearCart'
 >
 
-export function component({
-  state,
-  onAddProductToCart,
-  onRemoveProductFromCart,
-  onClearCart,
-}: Props) {
+export function component({ state, onClearCart, ...handlers }: Props) {
   const { products } = state
 
   if (products.isLoading) {
     return loading
   }
 
-  const rows = Store.getCartEntities(state).map((entity) => (
-    <Cart.row
-      key={entity.id}
-      entity={entity}
-      onAddProductToCart={onAddProductToCart}
-      onRemoveProductFromCart={onRemoveProductFromCart}
-    />
-  ))
-
+  const entities = Store.getCartEntities(state)
   const quantitySum = Store.getCartQuantitySum(state)
   const totalPrice = Store.getCartTotalPrice(state)
 
@@ -48,7 +35,7 @@ export function component({
             <td>actions</td>
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+        <Cart.Table.body entities={entities} {...handlers} />
       </table>
       <button
         aria-label="remove all"

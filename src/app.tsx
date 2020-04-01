@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import * as Store from '~/store'
@@ -19,18 +19,14 @@ export function component({ handlers }: Props) {
   }, [])
 
   return (
-    <BrowserRouter>
-      <Route
-        path="/"
-        render={() => <Home.component state={state} {...handlers} />}
-        exact
-      />
-      <Route
-        path="/cart"
-        render={() => <Cart.component state={state} {...handlers} />}
-        exact
-      />
-    </BrowserRouter>
+    <>
+      <Route path="/" exact>
+        <Home.component state={state} {...handlers} />
+      </Route>
+      <Route path="/cart" exact>
+        <Cart.component state={state} {...handlers} />
+      </Route>
+    </>
   )
 }
 

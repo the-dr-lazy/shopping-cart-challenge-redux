@@ -16,6 +16,14 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     plugins: [new TsConfigPathsPlugin()],
+
+    //
+    // Production profiling.
+    //
+    // alias: {
+    //   'react-dom$': 'react-dom/profiling',
+    //   'scheduler/tracing': 'scheduler/tracing-profiling',
+    // },
   },
 
   output: {

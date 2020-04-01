@@ -27,16 +27,6 @@ describe('Page.Cart.component', () => {
       cart: {},
     })
 
-    it('should not render any product', () => {
-      const { container } = render(
-        <Cart.component state={state} {...handlers} />
-      )
-
-      const tbody = container.querySelector('tbody')!
-
-      expect(tbody.childNodes.length).toBe(0)
-    })
-
     it('should disable remove all button', () => {
       const { getByLabelText } = render(
         <Cart.component state={state} {...handlers} />
@@ -58,16 +48,6 @@ describe('Page.Cart.component', () => {
     const state = mkTestState({
       cart: { [Data.Product.a.id]: 3 },
       products: { isLoading: false, items: [Data.Product.a] },
-    })
-
-    it('should render products', () => {
-      const { container } = render(
-        <Cart.component state={state} {...handlers} />
-      )
-
-      const tbody = container.querySelector('tbody')!
-
-      expect(tbody.childNodes.length).toBe(1)
     })
 
     it('should not disable remove all button', () => {

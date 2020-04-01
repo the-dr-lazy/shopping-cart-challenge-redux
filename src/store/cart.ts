@@ -4,8 +4,9 @@ import * as t from 'io-ts'
 import { Option } from 'fp-ts/lib/Option'
 import { monoidSum } from 'fp-ts/lib/Monoid'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { increment, decrement, constant } from 'fp-ts/lib/function'
 import { Observable, of } from 'rxjs'
+import { createSelector } from 'reselect'
+import { increment, decrement, constant, identity } from 'fp-ts/lib/function'
 import { createActionCreator, createReducer, ofType, ActionType } from 'deox'
 import {
   mergeMap,
@@ -137,9 +138,10 @@ export function getCartQuantity(
   return isomorphism ? O.getOrElse(constZero)(quantity) : quantity
 }
 
-export function getCartQuantitySum(state: State) {
-  return R.reduce(monoidSum.empty, monoidSum.concat)(state)
-}
+export const getCartQuantitySum = createSelector<State, State, number>(
+  identity,
+  (state) => R.reduce(monoidSum.empty, monoidSum.concat)(state)
+)
 
 //
 // Epics

@@ -8,23 +8,19 @@ import { defineDisplayName } from '~/utils'
 type Props = PropsWithHandlers<{ state: Store.State }, 'onAddProductToCart'>
 
 export function component({ state, onAddProductToCart }: Props) {
-  const products = Store.getProducts(state).map((product) => (
-    <li key={product.id}>
-      <Product.component
-        product={product}
-        onAddProductToCart={onAddProductToCart}
-      />
-    </li>
-  ))
+  const products = Store.getProducts(state)
   const isLoading = Store.getIsProductsLoading(state)
   const cartQuantitySum = Store.getCartQuantitySum(state)
 
   return (
     <div>
-      <Cart.mini cartQuantitySum={cartQuantitySum} />
+      <Cart.Mini.component.memo cartQuantitySum={cartQuantitySum} />
 
       {isLoading && <p>Loading...</p>}
-      <ul>{products}</ul>
+      <Product.List.component.memo
+        products={products}
+        onAddProductToCart={onAddProductToCart}
+      />
     </div>
   )
 }

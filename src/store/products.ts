@@ -29,7 +29,7 @@ export type Product = {
   image: string
 }
 
-type State = DeepImmutable<ReturnType<typeof reducer>>
+export type State = DeepImmutable<ReturnType<typeof reducer>>
 
 type Action = ActionType<typeof reducer>
 

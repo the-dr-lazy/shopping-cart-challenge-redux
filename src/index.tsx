@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 
 import * as App from '~/app'
 import * as Store from '~/store'
@@ -16,9 +17,14 @@ function main() {
 
   Store.rehydrate(store)
 
+  // @ts-ignore
+  window.store = store
+
   ReactDOM.render(
     <Provider store={store}>
-      <App.component handlers={handlers} />
+      <BrowserRouter>
+        <App.component handlers={handlers} />
+      </BrowserRouter>
     </Provider>,
     rootElement
   )

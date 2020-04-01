@@ -1,9 +1,10 @@
+import createCachedSelector from 're-reselect'
 import * as R from 'fp-ts/lib/Record'
 import * as O from 'fp-ts/lib/Option'
 import * as A from 'fp-ts/lib/ReadonlyArray'
 import { Option } from 'fp-ts/lib/Option'
 import { pipe } from 'fp-ts/lib/pipeable'
-import { identity } from 'fp-ts/lib/function'
+import { identity, flip, flow } from 'fp-ts/lib/function'
 import { combineReducers } from 'redux'
 import { ActionType } from 'deox'
 import { Observable, merge } from 'rxjs'
@@ -80,21 +81,22 @@ export function getCartTotalPrice(state: State) {
   )
 }
 
-export function getCartEntity(
-  productId: ProductId,
-  state: State
-): Option<CartEntity> {
-  const product = getProduct(productId, state)
-  const quantity = getCartQuantity(productId, state)
-
-  return pipe(product, O.map(mkCartEntity), O.ap(quantity))
-}
+export const getCartEntity = createCachedSelector(
+  flow(flip(getProduct), O.toUndefined),
+  flow(flip(getCartQuantity), O.toUndefined),
+  (product, quantity) =>
+    pipe(
+      O.fromNullable(product),
+      O.map(mkCartEntity),
+      O.ap(O.fromNullable(quantity))
+    )
+)((_state, productId) => productId)
 
 export function getCartEntities(state: State) {
   return pipe(
     state.cart,
     R.keys,
-    A.map((productId) => getCartEntity(productId, state)),
+    A.map((productId) => getCartEntity(state, productId)),
     somes
   )
 }

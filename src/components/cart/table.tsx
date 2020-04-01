@@ -1,28 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import * as Store from '~/store'
 import { PropsWithHandlers } from '~/handlers'
-import { singularNounToPluralByQuantity, defineDisplayName } from '~/utils'
-
-type MiniProps = {
-  cartQuantitySum: number
-}
-
-export function mini({ cartQuantitySum }: MiniProps) {
-  const itemNoun = singularNounToPluralByQuantity(cartQuantitySum, 'item')
-  const message =
-    cartQuantitySum > 0
-      ? `You have ${cartQuantitySum} ${itemNoun} in your cart.`
-      : `Your cart is empty.`
-
-  return (
-    <div>
-      <Link to="/cart">Cart</Link>
-      <div>{message}</div>
-    </div>
-  )
-}
+import { defineDisplayName } from '~/utils'
 
 type RowProps = PropsWithHandlers<
   { entity: Store.CartEntity },
@@ -89,4 +69,23 @@ export function row({
   )
 }
 
-defineDisplayName('Component.Cart', { mini, row })
+row.memo = React.memo(row)
+
+type RowsProps = PropsWithHandlers<
+  { entities: ReadonlyArray<Store.CartEntity> },
+  'onAddProductToCart' | 'onRemoveProductFromCart'
+>
+
+export function body({ entities, ...handlers }: RowsProps) {
+  return (
+    <tbody>
+      {entities.map((entity) =>
+        React.createElement(row.memo, { ...handlers, entity, key: entity.id })
+      )}
+    </tbody>
+  )
+}
+
+body.memo = React.memo(body)
+
+defineDisplayName('Component.Cart.Table', { row, body })

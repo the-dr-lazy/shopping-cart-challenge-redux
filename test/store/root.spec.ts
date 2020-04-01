@@ -63,7 +63,7 @@ describe('Store.Root.Selector.getCartEntity', () => {
       products: { items: [Data.Product.a] },
     })
 
-    expect(getCartEntity(Data.Product.b.id, state)).toBeNone()
+    expect(getCartEntity(state, Data.Product.b.id)).toBeNone()
   })
 
   it('should return Some(CartEntity) when the product exists in the cart', () => {
@@ -73,7 +73,7 @@ describe('Store.Root.Selector.getCartEntity', () => {
     })
     const expectedValue = { ...Data.Product.a, quantity: 3 }
 
-    expect(getCartEntity(Data.Product.a.id, state)).toBeSome(expectedValue)
+    expect(getCartEntity(state, Data.Product.a.id)).toBeSome(expectedValue)
   })
 })
 

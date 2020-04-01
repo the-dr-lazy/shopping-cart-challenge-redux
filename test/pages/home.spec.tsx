@@ -20,14 +20,6 @@ describe('Page.Home.component', () => {
 
       expect(queryByText(/loading/i)).not.toBeNull()
     })
-
-    it('should not render any product', () => {
-      const { container } = render(
-        <Home.component state={state} {...handlers} />
-      )
-
-      expect(container.querySelector('ul')?.childNodes.length).toBe(0)
-    })
   })
 
   describe('when products has been loaded', () => {
@@ -43,14 +35,6 @@ describe('Page.Home.component', () => {
       )
 
       expect(queryByText(/loading/i)).toBeNull()
-    })
-
-    it('should render products', () => {
-      const { container } = render(
-        <Home.component state={state} {...handlers} />
-      )
-
-      expect(container.querySelector('ul')?.childNodes.length).toBe(2)
     })
   })
 })
