@@ -17,13 +17,12 @@ function main() {
 
   Store.rehydrate(store)
 
-  // @ts-ignore
-  window.store = store
-
   ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
-        <App.component handlers={handlers} />
+        <React.StrictMode>
+          <App.component handlers={handlers} />
+        </React.StrictMode>
       </BrowserRouter>
     </Provider>,
     rootElement
