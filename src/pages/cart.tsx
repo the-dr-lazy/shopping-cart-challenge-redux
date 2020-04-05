@@ -2,17 +2,16 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import * as Store from '~/store'
-import { PropsWithHandlers } from '~/handlers'
+import { useHandlers } from '~/handlers'
 import { Cart } from '~/components'
 import { defineDisplayName } from '~/utils'
 
-type Props = PropsWithHandlers<
-  { state: Store.State },
-  'onAddProductToCart' | 'onRemoveProductFromCart' | 'onClearCart'
->
+type Props = { state: Store.State }
 
-export function component({ state, onClearCart, ...handlers }: Props) {
+export function component({ state }: Props) {
   const { products } = state
+
+  const { onClearCart } = useHandlers()
 
   if (products.isLoading) {
     return loading
@@ -35,7 +34,7 @@ export function component({ state, onClearCart, ...handlers }: Props) {
             <td>actions</td>
           </tr>
         </thead>
-        <Cart.Table.body entities={entities} {...handlers} />
+        <Cart.Table.body entities={entities} />
       </table>
       <button
         aria-label="remove all"

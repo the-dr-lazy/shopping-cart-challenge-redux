@@ -1,16 +1,15 @@
 import React from 'react'
 
 import * as Store from '~/store'
-import { PropsWithHandlers } from '~/handlers'
+import { useHandlers } from '~/handlers'
 import { defineDisplayName } from '~/utils'
 
-type ItemProps = PropsWithHandlers<
-  { product: Store.Product },
-  'onAddProductToCart'
->
+type ItemProps = { product: Store.Product }
 
-export function item({ product, onAddProductToCart }: ItemProps) {
+export function item({ product }: ItemProps) {
   const { id, name, price, image } = product
+
+  const { onAddProductToCart } = useHandlers()
 
   function handleAddToCartButtonClick() {
     onAddProductToCart(id)
@@ -34,10 +33,7 @@ export function item({ product, onAddProductToCart }: ItemProps) {
 
 item.memo = React.memo(item)
 
-type Props = PropsWithHandlers<
-  { products: ReadonlyArray<Store.Product> },
-  'onAddProductToCart'
->
+type Props = { products: ReadonlyArray<Store.Product> }
 
 export function component({ products, ...handlers }: Props) {
   return (

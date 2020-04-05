@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import * as App from '~/app'
 import * as Store from '~/store'
+import * as Handlers from '~/handlers'
 import { mkStore } from '~/store'
 import { mkHandlers } from '~/handlers'
 import { defaultEnvironment } from '~/environment'
@@ -20,9 +21,11 @@ function main() {
   ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
-        <React.StrictMode>
-          <App.component handlers={handlers} />
-        </React.StrictMode>
+        <Handlers.provider value={handlers}>
+          <React.StrictMode>
+            <App.component />
+          </React.StrictMode>
+        </Handlers.provider>
       </BrowserRouter>
     </Provider>,
     rootElement

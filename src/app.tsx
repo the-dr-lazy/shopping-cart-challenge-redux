@@ -4,15 +4,12 @@ import { useSelector } from 'react-redux'
 
 import * as Store from '~/store'
 import { Home, Cart } from '~/pages'
-import { Handlers } from '~/handlers'
+import { useHandlers } from '~/handlers'
 import { defineDisplayName } from '~/utils'
 
-type Props = {
-  handlers: Handlers
-}
-
-export function component({ handlers }: Props) {
+export function component() {
   const state = useSelector(Store.getState)
+  const handlers = useHandlers()
 
   React.useEffect(() => {
     handlers.onFetchProducts()

@@ -3,6 +3,7 @@ import { fireEvent } from '@testing-library/react'
 
 import * as Store from '~/store'
 import * as Table from '~/components/cart/table'
+import * as Handlers from '~/handlers'
 import { mkCartEntity } from '~/store/root'
 
 import * as Data from '../../data'
@@ -13,7 +14,9 @@ describe('Component.Cart.Table.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Table.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
+      <Handlers.provider value={handlers}>
+        <Table.row entity={mkCartEntity(Data.Product.a)(2)} />
+      </Handlers.provider>,
       'tbody'
     )
 
@@ -26,7 +29,9 @@ describe('Component.Cart.Table.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Table.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
+      <Handlers.provider value={handlers}>
+        <Table.row entity={mkCartEntity(Data.Product.a)(3)} />
+      </Handlers.provider>,
       'tbody'
     )
 
@@ -37,7 +42,9 @@ describe('Component.Cart.Table.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Table.row entity={mkCartEntity(Data.Product.a)(3)} {...handlers} />,
+      <Handlers.provider value={handlers}>
+        <Table.row entity={mkCartEntity(Data.Product.a)(3)} />
+      </Handlers.provider>,
       'tbody'
     )
 
@@ -50,7 +57,9 @@ describe('Component.Cart.Table.row', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <Table.row entity={mkCartEntity(Data.Product.b)(5)} {...handlers} />,
+      <Handlers.provider value={handlers}>
+        <Table.row entity={mkCartEntity(Data.Product.b)(5)} />
+      </Handlers.provider>,
       'tbody'
     )
 
@@ -66,7 +75,9 @@ describe('Component.Cart.Table.row', () => {
       const handlers = mkTestHandlers({})
 
       const { queryByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.a)(1)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -81,7 +92,9 @@ describe('Component.Cart.Table.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.a)(1)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -96,7 +109,9 @@ describe('Component.Cart.Table.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.b)(1)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.b)(1)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -113,7 +128,9 @@ describe('Component.Cart.Table.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.a)(2)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.a)(2)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -128,7 +145,9 @@ describe('Component.Cart.Table.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.b)(2)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.b)(2)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -145,7 +164,9 @@ describe('Component.Cart.Table.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.a)(1)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.a)(1)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -160,7 +181,9 @@ describe('Component.Cart.Table.row', () => {
       })
 
       const { getByLabelText } = render(
-        <Table.row entity={mkCartEntity(Data.Product.b)(1)} {...handlers} />,
+        <Handlers.provider value={handlers}>
+          <Table.row entity={mkCartEntity(Data.Product.b)(1)} />
+        </Handlers.provider>,
         'tbody'
       )
 
@@ -175,16 +198,11 @@ describe('Component.Cart.Table.row', () => {
 })
 
 describe('Component.Cart.Table.body', () => {
-  const handlers = mkTestHandlers()
-
   describe('when cart is empty', () => {
     it('should not render any product', () => {
       const entities: ReadonlyArray<Store.CartEntity> = []
 
-      const { container } = render(
-        <Table.body entities={entities} {...handlers} />,
-        'table'
-      )
+      const { container } = render(<Table.body entities={entities} />, 'table')
 
       const tbody = container.querySelector('tbody')!
 
@@ -196,10 +214,7 @@ describe('Component.Cart.Table.body', () => {
     it('should render products', () => {
       const entities = [mkCartEntity(Data.Product.a)(2)]
 
-      const { container } = render(
-        <Table.body entities={entities} {...handlers} />,
-        'table'
-      )
+      const { container } = render(<Table.body entities={entities} />, 'table')
 
       const tbody = container.querySelector('tbody')!
 

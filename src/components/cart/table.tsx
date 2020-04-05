@@ -1,20 +1,15 @@
 import React from 'react'
 
 import * as Store from '~/store'
-import { PropsWithHandlers } from '~/handlers'
+import { useHandlers } from '~/handlers'
 import { defineDisplayName } from '~/utils'
 
-type RowProps = PropsWithHandlers<
-  { entity: Store.CartEntity },
-  'onAddProductToCart' | 'onRemoveProductFromCart'
->
+type RowProps = { entity: Store.CartEntity }
 
-export function row({
-  entity,
-  onAddProductToCart,
-  onRemoveProductFromCart,
-}: RowProps) {
+export function row({ entity }: RowProps) {
   const { id, name, price, quantity } = entity
+
+  const { onAddProductToCart, onRemoveProductFromCart } = useHandlers()
 
   function handleIncrementQuantityButtonClick() {
     onAddProductToCart(id)
@@ -71,16 +66,13 @@ export function row({
 
 row.memo = React.memo(row)
 
-type RowsProps = PropsWithHandlers<
-  { entities: ReadonlyArray<Store.CartEntity> },
-  'onAddProductToCart' | 'onRemoveProductFromCart'
->
+type RowsProps = { entities: ReadonlyArray<Store.CartEntity> }
 
-export function body({ entities, ...handlers }: RowsProps) {
+export function body({ entities }: RowsProps) {
   return (
     <tbody>
       {entities.map((entity) =>
-        React.createElement(row.memo, { ...handlers, entity, key: entity.id })
+        React.createElement(row.memo, { entity, key: entity.id })
       )}
     </tbody>
   )

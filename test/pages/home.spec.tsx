@@ -1,5 +1,6 @@
 import React from 'react'
 
+import * as Handlers from '~/handlers'
 import * as Home from '~/pages/home'
 
 import * as Data from '../data'
@@ -15,7 +16,9 @@ describe('Page.Home.component', () => {
 
     it('should render a loading message', () => {
       const { queryByText } = render(
-        <Home.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Home.component state={state} />
+        </Handlers.provider>
       )
 
       expect(queryByText(/loading/i)).not.toBeNull()
@@ -31,7 +34,9 @@ describe('Page.Home.component', () => {
 
     it('should not render loading message', () => {
       const { queryByText } = render(
-        <Home.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Home.component state={state} />
+        </Handlers.provider>
       )
 
       expect(queryByText(/loading/i)).toBeNull()

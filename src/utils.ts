@@ -61,11 +61,11 @@ export type Epic<
   TOutput extends AnyAction,
   TState,
   TEnvironment
-  > = (
-    action$: Observable<TInput>,
-    state$: Observable<TState>,
-    environment: TEnvironment
-  ) => Observable<TOutput>
+> = (
+  action$: Observable<TInput>,
+  state$: Observable<TState>,
+  environment: TEnvironment
+) => Observable<TOutput>
 
 /**
  * Identical as redux-observable's combineEpics with replaced Epic type.

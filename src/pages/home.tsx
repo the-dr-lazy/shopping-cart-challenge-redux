@@ -2,12 +2,11 @@ import React from 'react'
 
 import * as Store from '~/store'
 import { Product, Cart } from '~/components'
-import { PropsWithHandlers } from '~/handlers'
 import { defineDisplayName } from '~/utils'
 
-type Props = PropsWithHandlers<{ state: Store.State }, 'onAddProductToCart'>
+type Props = { state: Store.State }
 
-export function component({ state, onAddProductToCart }: Props) {
+export function component({ state }: Props) {
   const products = Store.getProducts(state)
   const isLoading = Store.getIsProductsLoading(state)
   const cartQuantitySum = Store.getCartQuantitySum(state)
@@ -17,10 +16,7 @@ export function component({ state, onAddProductToCart }: Props) {
       <Cart.Mini.component.memo cartQuantitySum={cartQuantitySum} />
 
       {isLoading && <p>Loading...</p>}
-      <Product.List.component.memo
-        products={products}
-        onAddProductToCart={onAddProductToCart}
-      />
+      <Product.List.component.memo products={products} />
     </div>
   )
 }

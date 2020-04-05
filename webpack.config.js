@@ -1,5 +1,7 @@
 const path = require('path')
 
+const TerserPlugin = require('terser-webpack-plugin')
+
 const HTMLPlugin = require('html-webpack-plugin')
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
@@ -20,15 +22,30 @@ module.exports = {
     //
     // Production profiling.
     //
-    // alias: {
-    //   'react-dom$': 'react-dom/profiling',
-    //   'scheduler/tracing': 'scheduler/tracing-profiling',
-    // },
+    alias: {
+      'react-dom$': 'react-dom/profiling',
+      'scheduler/tracing': 'scheduler/tracing-profiling',
+    },
   },
 
   output: {
     path: __dirname + '/dist',
     filename: 'app.bundle.js',
+  },
+
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          mangle: {
+            safari10: true,
+          },
+          keep_classnames: true,
+          keep_fnames: true,
+        },
+      }),
+    ],
   },
 
   devtool: 'source-map',

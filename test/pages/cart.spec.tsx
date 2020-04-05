@@ -1,5 +1,6 @@
 import React from 'react'
 
+import * as Handlers from '~/handlers'
 import * as Cart from '~/pages/cart'
 
 import * as Data from '../data'
@@ -15,7 +16,9 @@ describe('Page.Cart.component', () => {
       })
 
       const { queryByText } = render(
-        <Cart.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Cart.component state={state} />
+        </Handlers.provider>
       )
 
       expect(queryByText(/loading/i)).not.toBeNull()
@@ -29,7 +32,9 @@ describe('Page.Cart.component', () => {
 
     it('should disable remove all button', () => {
       const { getByLabelText } = render(
-        <Cart.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Cart.component state={state} />
+        </Handlers.provider>
       )
 
       expect(getByLabelText(/remove all/i)).toBeDisabled()
@@ -37,7 +42,9 @@ describe('Page.Cart.component', () => {
 
     it('should render total price', () => {
       const { getByTestId } = render(
-        <Cart.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Cart.component state={state} />
+        </Handlers.provider>
       )
 
       expect(getByTestId('total-price')).toHaveTextContent('$0')
@@ -52,7 +59,9 @@ describe('Page.Cart.component', () => {
 
     it('should not disable remove all button', () => {
       const { getByLabelText } = render(
-        <Cart.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Cart.component state={state} />
+        </Handlers.provider>
       )
 
       expect(getByLabelText(/remove all/i)).toBeEnabled()
@@ -60,7 +69,9 @@ describe('Page.Cart.component', () => {
 
     it('should render total price', () => {
       const { getByTestId } = render(
-        <Cart.component state={state} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <Cart.component state={state} />
+        </Handlers.provider>
       )
 
       expect(getByTestId('total-price')).toHaveTextContent(

@@ -2,6 +2,7 @@ import React from 'react'
 import { fireEvent } from '@testing-library/react'
 
 import * as Store from '~/store'
+import * as Handlers from '~/handlers'
 import * as List from '~/components/product/list'
 
 import * as Data from '../../data'
@@ -12,7 +13,9 @@ describe('Component.Product.List.item', () => {
     const handlers = mkTestHandlers()
 
     const { container } = render(
-      <List.item product={Data.Product.a} {...handlers} />
+      <Handlers.provider value={handlers}>
+        <List.item product={Data.Product.a} />
+      </Handlers.provider>
     )
 
     expect(container.querySelector('img')).not.toBeNull()
@@ -22,7 +25,9 @@ describe('Component.Product.List.item', () => {
     const handlers = mkTestHandlers()
 
     const { container } = render(
-      <List.item product={Data.Product.a} {...handlers} />
+      <Handlers.provider value={handlers}>
+        <List.item product={Data.Product.a} />
+      </Handlers.provider>
     )
 
     expect(container.querySelector('img')).toHaveAttribute(
@@ -35,7 +40,9 @@ describe('Component.Product.List.item', () => {
     const handlers = mkTestHandlers()
 
     const { container } = render(
-      <List.item product={Data.Product.a} {...handlers} />
+      <Handlers.provider value={handlers}>
+        <List.item product={Data.Product.a} />
+      </Handlers.provider>
     )
 
     expect(container.querySelector('img')).toHaveAttribute(
@@ -48,7 +55,9 @@ describe('Component.Product.List.item', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <List.item product={Data.Product.a} {...handlers} />
+      <Handlers.provider value={handlers}>
+        <List.item product={Data.Product.a} />
+      </Handlers.provider>
     )
 
     expect(queryByText(Data.Product.a.name)).not.toBeNull()
@@ -58,7 +67,9 @@ describe('Component.Product.List.item', () => {
     const handlers = mkTestHandlers()
 
     const { queryByText } = render(
-      <List.item product={Data.Product.a} {...handlers} />
+      <Handlers.provider value={handlers}>
+        <List.item product={Data.Product.a} />
+      </Handlers.provider>
     )
 
     expect(
@@ -73,7 +84,9 @@ describe('Component.Product.List.item', () => {
       })
 
       const { getByLabelText } = render(
-        <List.item product={Data.Product.a} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <List.item product={Data.Product.a} />
+        </Handlers.provider>
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
@@ -87,7 +100,9 @@ describe('Component.Product.List.item', () => {
       })
 
       const { getByLabelText } = render(
-        <List.item product={Data.Product.a} {...handlers} />
+        <Handlers.provider value={handlers}>
+          <List.item product={Data.Product.a} />
+        </Handlers.provider>
       )
 
       fireEvent.click(getByLabelText(/add to cart/i))
@@ -98,15 +113,11 @@ describe('Component.Product.List.item', () => {
 })
 
 describe('Component.Product.List.component', () => {
-  const handlers = mkTestHandlers()
-
   describe('when there is not any product', () => {
     const products: ReadonlyArray<Store.Product> = []
 
     it('should not render any product', () => {
-      const { container } = render(
-        <List.component products={products} {...handlers} />
-      )
+      const { container } = render(<List.component products={products} />)
 
       expect(container.querySelector('ul')?.childNodes.length).toBe(0)
     })
@@ -116,9 +127,7 @@ describe('Component.Product.List.component', () => {
     const products = [Data.Product.a, Data.Product.b]
 
     it('should render products', () => {
-      const { container } = render(
-        <List.component products={products} {...handlers} />
-      )
+      const { container } = render(<List.component products={products} />)
 
       expect(container.querySelector('ul')?.childNodes.length).toBe(2)
     })
