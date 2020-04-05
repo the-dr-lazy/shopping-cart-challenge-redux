@@ -9,19 +9,19 @@ import { defineDisplayName } from '~/utils'
 
 export function component() {
   const state = useSelector(Store.getState)
-  const handlers = useHandlers()
+  const { onFetchProducts } = useHandlers()
 
   React.useEffect(() => {
-    handlers.onFetchProducts()
+    onFetchProducts()
   }, [])
 
   return (
     <>
       <Route path="/" exact>
-        <Home.component state={state} {...handlers} />
+        <Home.component state={state} />
       </Route>
       <Route path="/cart" exact>
-        <Cart.component state={state} {...handlers} />
+        <Cart.component state={state} />
       </Route>
     </>
   )
