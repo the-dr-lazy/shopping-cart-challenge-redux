@@ -14,7 +14,7 @@ const paths = {
 }
 
 module.exports = {
-  entry: ['./src/index.tsx'],
+  entry: ['./src/Main.tsx'],
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     plugins: [new TsConfigPathsPlugin()],
