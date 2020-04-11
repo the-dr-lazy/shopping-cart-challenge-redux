@@ -145,7 +145,7 @@ export function getCartQuantity(
 
 export const getCartQuantitySum = createSelector<State, State, number>(
   identity,
-  (state) => R.reduce(monoidSum.empty, monoidSum.concat)(state)
+  R.reduce(monoidSum.empty, monoidSum.concat)
 )
 
 //
