@@ -9,16 +9,22 @@ import { mkCartEntity } from '~/Store/Root'
 import * as Data from '~/Test/Data'
 import { render, mkTestHandlers } from '~/Test/Utils'
 
+function renderTableRow(
+  product: Store.Product,
+  quantity: number,
+  handlers = mkTestHandlers()
+) {
+  return render(
+    <Handlers.provider value={handlers}>
+      <Table.row entity={mkCartEntity(product)(quantity)} />
+    </Handlers.provider>,
+    'tbody'
+  )
+}
+
 describe('Component.Cart.Table.row', () => {
   it('should render product name', () => {
-    const handlers = mkTestHandlers()
-
-    const { queryByText } = render(
-      <Handlers.provider value={handlers}>
-        <Table.row entity={mkCartEntity(Data.Product.a)(2)} />
-      </Handlers.provider>,
-      'tbody'
-    )
+    const { queryByText } = renderTableRow(Data.Product.a, 2)
 
     const element = queryByText(Data.Product.a.name, { exact: false })
 
@@ -26,27 +32,13 @@ describe('Component.Cart.Table.row', () => {
   })
 
   it('should render product quantity', () => {
-    const handlers = mkTestHandlers()
-
-    const { queryByText } = render(
-      <Handlers.provider value={handlers}>
-        <Table.row entity={mkCartEntity(Data.Product.a)(3)} />
-      </Handlers.provider>,
-      'tbody'
-    )
+    const { queryByText } = renderTableRow(Data.Product.a, 3)
 
     expect(queryByText('3')).not.toBeNull()
   })
 
   it('should render product price', () => {
-    const handlers = mkTestHandlers()
-
-    const { queryByText } = render(
-      <Handlers.provider value={handlers}>
-        <Table.row entity={mkCartEntity(Data.Product.a)(3)} />
-      </Handlers.provider>,
-      'tbody'
-    )
+    const { queryByText } = renderTableRow(Data.Product.a, 3)
 
     const element = queryByText(`$${Data.Product.a.price}`, { exact: false })
 
@@ -54,14 +46,7 @@ describe('Component.Cart.Table.row', () => {
   })
 
   it('should render total price', () => {
-    const handlers = mkTestHandlers()
-
-    const { queryByText } = render(
-      <Handlers.provider value={handlers}>
-        <Table.row entity={mkCartEntity(Data.Product.b)(5)} />
-      </Handlers.provider>,
-      'tbody'
-    )
+    const { queryByText } = renderTableRow(Data.Product.b, 5)
 
     const element = queryByText(`$${Data.Product.b.price * 5}`, {
       exact: false,
@@ -72,14 +57,7 @@ describe('Component.Cart.Table.row', () => {
 
   describe('when quantity is one', () => {
     it('should disable decrease quantity button', () => {
-      const handlers = mkTestHandlers({})
-
-      const { queryByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.a)(1)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { queryByLabelText } = renderTableRow(Data.Product.a, 1)
 
       expect(queryByLabelText(/decrease quantity/i)).toBeDisabled()
     })
@@ -91,12 +69,7 @@ describe('Component.Cart.Table.row', () => {
         onAddProductToCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.a)(1)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { getByLabelText } = renderTableRow(Data.Product.a, 1, handlers)
 
       fireEvent.click(getByLabelText(/increase quantity/i))
 
@@ -108,12 +81,7 @@ describe('Component.Cart.Table.row', () => {
         onAddProductToCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.b)(1)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { getByLabelText } = renderTableRow(Data.Product.b, 1, handlers)
 
       fireEvent.click(getByLabelText(/increase quantity/i))
 
@@ -127,12 +95,7 @@ describe('Component.Cart.Table.row', () => {
         onRemoveProductFromCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.a)(2)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { getByLabelText } = renderTableRow(Data.Product.a, 2, handlers)
 
       fireEvent.click(getByLabelText(/decrease quantity/i))
 
@@ -144,12 +107,7 @@ describe('Component.Cart.Table.row', () => {
         onRemoveProductFromCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.b)(2)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { getByLabelText } = renderTableRow(Data.Product.b, 2, handlers)
 
       fireEvent.click(getByLabelText(/decrease quantity/i))
 
@@ -163,12 +121,7 @@ describe('Component.Cart.Table.row', () => {
         onRemoveProductFromCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.a)(1)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { getByLabelText } = renderTableRow(Data.Product.a, 1, handlers)
 
       fireEvent.click(getByLabelText(/remove product/i))
 
@@ -180,12 +133,7 @@ describe('Component.Cart.Table.row', () => {
         onRemoveProductFromCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Table.row entity={mkCartEntity(Data.Product.b)(1)} />
-        </Handlers.provider>,
-        'tbody'
-      )
+      const { getByLabelText } = renderTableRow(Data.Product.b, 1, handlers)
 
       fireEvent.click(getByLabelText(/remove product/i))
 
@@ -197,12 +145,14 @@ describe('Component.Cart.Table.row', () => {
   })
 })
 
+function renderTableBody(entities: ReadonlyArray<Store.CartEntity> = []) {
+  return render(<Table.body entities={entities} />, 'table')
+}
+
 describe('Component.Cart.Table.body', () => {
   describe('when cart is empty', () => {
     it('should not render any product', () => {
-      const entities: ReadonlyArray<Store.CartEntity> = []
-
-      const { container } = render(<Table.body entities={entities} />, 'table')
+      const { container } = renderTableBody()
 
       const tbody = container.querySelector('tbody')!
 
@@ -214,7 +164,7 @@ describe('Component.Cart.Table.body', () => {
     it('should render products', () => {
       const entities = [mkCartEntity(Data.Product.a)(2)]
 
-      const { container } = render(<Table.body entities={entities} />, 'table')
+      const { container } = renderTableBody(entities)
 
       const tbody = container.querySelector('tbody')!
 

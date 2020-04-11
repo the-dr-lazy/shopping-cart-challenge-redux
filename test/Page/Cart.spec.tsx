@@ -1,25 +1,29 @@
 import React from 'react'
 
 import * as Handlers from '~/Handlers'
+import * as Store from '~/Store'
 import * as Cart from '~/Page/Cart'
-
 import * as Data from '~/Test/Data'
 import { render, mkTestHandlers, mkTestState } from '~/Test/Utils'
 
-describe('Page.Cart.component', () => {
+function renderCartComponent(state: Store.State) {
   const handlers = mkTestHandlers()
 
+  return render(
+    <Handlers.provider value={handlers}>
+      <Cart.component state={state} />
+    </Handlers.provider>
+  )
+}
+
+describe('Page.Cart.component', () => {
   describe('when products are loading', () => {
     it('should render loading message', () => {
       const state = mkTestState({
         products: { isLoading: true },
       })
 
-      const { queryByText } = render(
-        <Handlers.provider value={handlers}>
-          <Cart.component state={state} />
-        </Handlers.provider>
-      )
+      const { queryByText } = renderCartComponent(state)
 
       expect(queryByText(/loading/i)).not.toBeNull()
     })
@@ -31,21 +35,13 @@ describe('Page.Cart.component', () => {
     })
 
     it('should disable remove all button', () => {
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Cart.component state={state} />
-        </Handlers.provider>
-      )
+      const { getByLabelText } = renderCartComponent(state)
 
       expect(getByLabelText(/remove all/i)).toBeDisabled()
     })
 
     it('should render total price', () => {
-      const { getByTestId } = render(
-        <Handlers.provider value={handlers}>
-          <Cart.component state={state} />
-        </Handlers.provider>
-      )
+      const { getByTestId } = renderCartComponent(state)
 
       expect(getByTestId('total-price')).toHaveTextContent('$0')
     })
@@ -58,21 +54,13 @@ describe('Page.Cart.component', () => {
     })
 
     it('should not disable remove all button', () => {
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <Cart.component state={state} />
-        </Handlers.provider>
-      )
+      const { getByLabelText } = renderCartComponent(state)
 
       expect(getByLabelText(/remove all/i)).toBeEnabled()
     })
 
     it('should render total price', () => {
-      const { getByTestId } = render(
-        <Handlers.provider value={handlers}>
-          <Cart.component state={state} />
-        </Handlers.provider>
-      )
+      const { getByTestId } = renderCartComponent(state)
 
       expect(getByTestId('total-price')).toHaveTextContent(
         '$' + Data.Product.a.price * 3

@@ -8,27 +8,23 @@ import * as List from '~/Component/Product/List'
 import * as Data from '~/Test/Data'
 import { render, mkTestHandlers } from '~/Test/Utils'
 
+function renderListItem(product: Store.Product, handlers = mkTestHandlers()) {
+  return render(
+    <Handlers.provider value={handlers}>
+      <List.item product={product} />
+    </Handlers.provider>
+  )
+}
+
 describe('Component.Product.List.item', () => {
   it('should render product image', () => {
-    const handlers = mkTestHandlers()
-
-    const { container } = render(
-      <Handlers.provider value={handlers}>
-        <List.item product={Data.Product.a} />
-      </Handlers.provider>
-    )
+    const { container } = renderListItem(Data.Product.a)
 
     expect(container.querySelector('img')).not.toBeNull()
   })
 
   it('should render product image src', () => {
-    const handlers = mkTestHandlers()
-
-    const { container } = render(
-      <Handlers.provider value={handlers}>
-        <List.item product={Data.Product.a} />
-      </Handlers.provider>
-    )
+    const { container } = renderListItem(Data.Product.a)
 
     expect(container.querySelector('img')).toHaveAttribute(
       'src',
@@ -37,13 +33,7 @@ describe('Component.Product.List.item', () => {
   })
 
   it('should render product image alt', () => {
-    const handlers = mkTestHandlers()
-
-    const { container } = render(
-      <Handlers.provider value={handlers}>
-        <List.item product={Data.Product.a} />
-      </Handlers.provider>
-    )
+    const { container } = renderListItem(Data.Product.a)
 
     expect(container.querySelector('img')).toHaveAttribute(
       'alt',
@@ -52,25 +42,13 @@ describe('Component.Product.List.item', () => {
   })
 
   it('should render product name', () => {
-    const handlers = mkTestHandlers()
-
-    const { queryByText } = render(
-      <Handlers.provider value={handlers}>
-        <List.item product={Data.Product.a} />
-      </Handlers.provider>
-    )
+    const { queryByText } = renderListItem(Data.Product.a)
 
     expect(queryByText(Data.Product.a.name)).not.toBeNull()
   })
 
   it('should render price', () => {
-    const handlers = mkTestHandlers()
-
-    const { queryByText } = render(
-      <Handlers.provider value={handlers}>
-        <List.item product={Data.Product.a} />
-      </Handlers.provider>
-    )
+    const { queryByText } = renderListItem(Data.Product.a)
 
     expect(
       queryByText(`$${Data.Product.a.price}`, { exact: false })
@@ -83,11 +61,7 @@ describe('Component.Product.List.item', () => {
         onAddProductToCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <List.item product={Data.Product.a} />
-        </Handlers.provider>
-      )
+      const { getByLabelText } = renderListItem(Data.Product.a, handlers)
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
@@ -99,11 +73,7 @@ describe('Component.Product.List.item', () => {
         onAddProductToCart: jest.fn(),
       })
 
-      const { getByLabelText } = render(
-        <Handlers.provider value={handlers}>
-          <List.item product={Data.Product.a} />
-        </Handlers.provider>
-      )
+      const { getByLabelText } = renderListItem(Data.Product.a, handlers)
 
       fireEvent.click(getByLabelText(/add to cart/i))
 
@@ -112,12 +82,16 @@ describe('Component.Product.List.item', () => {
   })
 })
 
+function renderListComponent(products: ReadonlyArray<Store.Product>) {
+  return render(<List.component products={products} />)
+}
+
 describe('Component.Product.List.component', () => {
   describe('when there is not any product', () => {
     const products: ReadonlyArray<Store.Product> = []
 
     it('should not render any product', () => {
-      const { container } = render(<List.component products={products} />)
+      const { container } = renderListComponent(products)
 
       expect(container.querySelector('ul')?.childNodes.length).toBe(0)
     })
@@ -127,7 +101,7 @@ describe('Component.Product.List.component', () => {
     const products = [Data.Product.a, Data.Product.b]
 
     it('should render products', () => {
-      const { container } = render(<List.component products={products} />)
+      const { container } = renderListComponent(products)
 
       expect(container.querySelector('ul')?.childNodes.length).toBe(2)
     })
